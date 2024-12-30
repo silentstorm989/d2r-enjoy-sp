@@ -2,5 +2,85 @@
   "name": "D2R-ENJOY-SP",
   "description": "Based off of Enjoy-SP_Mod for Diablo II LOD",
   "author": "markm",
-  "version": "1.00"
+  "version": "1.00",
+  "config": [
+    {
+      "id": "isExtraTabsEnabled",
+      "type": "checkbox",
+      "name": "Enable Extra Stash Tabs",
+      "description": "Modifies your stash save files to enable the additional 4 shared stash tabs. Requires the stash tab save files to already exist.",
+      "defaultValue": true
+    },
+    {
+      "id": "isCustomTabsEnabled",
+      "type": "checkbox",
+      "name": "Enable Custom Tab Names",
+      "description": "Set a custom name for each stash tab using the fields below.",
+      "defaultValue": false
+    },
+    {
+      "id": "tabNamePersonal",
+      "type": "text",
+      "name": "Personal Tab",
+      "description": "Set a custom name for the Personal stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared1",
+      "type": "text",
+      "name": "Shared Tab 1",
+      "description": "Set a custom name for the first Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared2",
+      "type": "text",
+      "name": "Shared Tab 2",
+      "description": "Set a custom name for the second Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared3",
+      "type": "text",
+      "name": "Shared Tab 3",
+      "description": "Set a custom name for the third Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared4",
+      "type": "text",
+      "name": "Shared Tab 4",
+      "description": "Set a custom name for the fourth Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared5",
+      "type": "text",
+      "name": "Shared Tab 5",
+      "description": "Set a custom name for the fifth Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared6",
+      "type": "text",
+      "name": "Shared Tab 6",
+      "description": "Set a custom name for the sixth Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    },
+    {
+      "id": "tabNameShared7",
+      "type": "text",
+      "name": "Shared Tab 7",
+      "description": "Set a custom name for the seventh Shared stash tab. Leave blank to use the default name.",
+      "defaultValue": "",
+      "visible": ["value", "isCustomTabsEnabled"]
+    }
+  ]
 }
