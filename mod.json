@@ -24,7 +24,10 @@
       "name": "Personal Tab",
       "description": "Set a custom name for the Personal stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared1",
@@ -32,7 +35,10 @@
       "name": "Shared Tab 1",
       "description": "Set a custom name for the first Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared2",
@@ -40,7 +46,10 @@
       "name": "Shared Tab 2",
       "description": "Set a custom name for the second Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared3",
@@ -48,7 +57,10 @@
       "name": "Shared Tab 3",
       "description": "Set a custom name for the third Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared4",
@@ -56,7 +68,10 @@
       "name": "Shared Tab 4",
       "description": "Set a custom name for the fourth Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared5",
@@ -64,7 +79,10 @@
       "name": "Shared Tab 5",
       "description": "Set a custom name for the fifth Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared6",
@@ -72,7 +90,10 @@
       "name": "Shared Tab 6",
       "description": "Set a custom name for the sixth Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
     },
     {
       "id": "tabNameShared7",
@@ -80,7 +101,48 @@
       "name": "Shared Tab 7",
       "description": "Set a custom name for the seventh Shared stash tab. Leave blank to use the default name.",
       "defaultValue": "",
-      "visible": ["value", "isCustomTabsEnabled"]
+      "visible": [
+        "value",
+        "isCustomTabsEnabled"
+      ]
+    },
+    {
+      "id": "stackableGems",
+      "type": "section",
+      "name": "StackableGems",
+      "defaultExpanded": false,
+      "children": [
+        {
+          "id": "default",
+          "type": "checkbox",
+          "name": "Default to Stackable",
+          "description": "Enable to have the stackable variant be the default (e.g. items will drop as stackable).",
+          "defaultValue": true
+        },
+        {
+          "id": "maxStack",
+          "type": "number",
+          "name": "Maximum Stack Size",
+          "description": "The maximum quantity that each stack can have.",
+          "defaultValue": 256,
+          "minValue": 2,
+          "maxValue": 256
+        },
+        {
+          "id": "convertWhenDestacking",
+          "type": "checkbox",
+          "name": "Convert When Destacking",
+          "description": "Enable to have the split off gem automatically convert to a non-stackable variant when splitting a stack. Warning: this adds 15k+ cube recipes which slows down the game's startup.",
+          "defaultValue": false
+        },
+        {
+          "id": "bulkUpgrade",
+          "type": "checkbox",
+          "name": "Bulk Upgrade Recipe",
+          "description": "Enable to add 30 to 10 bulk upgrade recipes (stack of 30 gems + 1 id scroll = stack of 10 gems of the next highest tier). Warning: this adds 6k+ cube recipes which slows down the game's startup.",
+          "defaultValue": false
+        }
+      ]
     }
   ]
 }
