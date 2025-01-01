@@ -181,6 +181,38 @@
           "defaultValue": false
         }
       ]
+    },
+    {
+      "id": "act5Options",
+      "type": "section",
+      "name": "Cain in Act 5",
+      "defaultExpanded": false,
+      "children": [
+        {
+          "id": "act5_options",
+          "name": "Move Cain in Act 5",
+          "description": "",
+          "type": "select",
+          "defaultValue": "stash",
+          "options": [
+            {
+              "description": "",
+              "label": "Stash",
+              "value": "stash"
+            },
+            {
+              "description": "",
+              "label": "Malah",
+              "value": "malah"
+            },
+            {
+              "description": "",
+              "label": "Larzuk",
+              "value": "larzuk"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

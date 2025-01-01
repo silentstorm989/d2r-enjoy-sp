@@ -2296,6 +2296,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
 // Removed the gems from the rune upgrade recipes. 
 // - Up until Pul: 3 of the same runes = next rune
 // - After Pul: 2 of a kind + jewel = next rune
+// Removed Hel-Rune from the de-socked recipe. New recipe: 1 Town Scroll + Socketed Item (destroys gems).
 {
   const cubemainFilename = 'global\\excel\\cubemain.txt';
   const cubemain = D2RMM.readTsv(cubemainFilename);
@@ -2403,7 +2404,56 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
       row.description = '2 Cham Runes + Jewel -> Zod Rune';
       row['input 2'] = 'jew';
     }
+    if (row.description === '1 Hel Rune + Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item') {
+      row.description = 'Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item';
+      row.numinputs = 2;
+      row['input 2'] = 'tsc';
+      row['input 2'] = '';
+    }
   });
+  D2RMM.writeTsv(cubemainFilename, cubemain);
+}
+
+// Socket recipes
+{
+  const cubemainFilename = 'global\\excel\\cubemain.txt';
+  const cubemain = D2RMM.readTsv(cubemainFilename);
+  for (let sockets = 1; sockets <= 6; sockets = sockets + 1) {
+    const socketRecipe = {
+      description: `"${sockets} Perfect Gem"`,
+      enabled: 1,
+      version: 100,
+      numinputs: sockets + 1,
+      'input 2': `"gem4,qty=${sockets}"`,
+      output: 'useitem',
+      'mod 1': 'sock',
+      'mod 1 min': sockets,
+      'mod 1 max': sockets,
+      '*eol': 0,
+    };
+    function addRecipeNormal(code, name) {
+      cubemain.rows.push({
+        ...socketRecipe,
+        description: `${socketRecipe.description} + Normal ${name} -> Socketed Normal ${name}`,
+        'input 1': `"${code},nor,nos"`
+      });
+    }
+    function addRecipeSpecial(code, name) {
+      cubemain.rows.push({
+        ...socketRecipe,
+        description: `${socketRecipe.description} + Special ${name} -> Socketed Special ${name}`,
+        'input 1': `"${code},hiq,nos"`
+      });
+    }
+    addRecipeNormal('helm', 'Helm');
+    addRecipeNormal('shld', 'Shield');
+    addRecipeNormal('tors', 'Torso');
+    addRecipeNormal('weap', 'Weapon');
+    addRecipeSpecial('helm', 'Helm');
+    addRecipeSpecial('shld', 'Shield');
+    addRecipeSpecial('tors', 'Torso');
+    addRecipeSpecial('weap', 'Weapon');
+  }
   D2RMM.writeTsv(cubemainFilename, cubemain);
 }
 
@@ -2428,6 +2478,50 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     }
   });
   D2RMM.writeTsv(charstatsFilename, charstats);
+}
+
+{
+  if (config["act5_options"] == "stash") {
+    D2RMM.copyFile(
+      'act5_cain_stash\\global\\tiles\\expansion\\combined_ds1.bin',
+      'global\\tiles\\expansion\\combined_ds1.bin',
+      true
+    );
+
+    D2RMM.copyFile(
+      'act5_cain_stash\\global\\tiles\\expansion\\town\\townwest.ds1',
+      'global\\tiles\\expansion\\town\\townwest.ds1',
+      true
+    );
+  }
+
+  if (config["act5_options"] == "malah") {
+    D2RMM.copyFile(
+      'act5_cain_malah\\global\\tiles\\expansion\\combined_ds1.bin',
+      'global\\tiles\\expansion\\combined_ds1.bin',
+      true
+    );
+
+    D2RMM.copyFile(
+      'act5_cain_malah\\global\\tiles\\expansion\\town\\townwest.ds1',
+      'global\\tiles\\expansion\\town\\townwest.ds1',
+      true
+    );
+  }
+
+  if (config["act5_options"] == "larzuk") {
+    D2RMM.copyFile(
+      'act5_cain_larzuk\\global\\tiles\\expansion\\combined_ds1.bin',
+      'global\\tiles\\expansion\\combined_ds1.bin',
+      true
+    );
+
+    D2RMM.copyFile(
+      'act5_cain_larzuk\\global\\tiles\\expansion\\town\\townwest.ds1',
+      'global\\tiles\\expansion\\town\\townwest.ds1',
+      true
+    );
+  }
 }
 
 // Copy files from hd to hd
