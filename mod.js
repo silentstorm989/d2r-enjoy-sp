@@ -1939,6 +1939,69 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeJson(itemRunesFilename, itemRunes);
 }
 
+{
+  const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
+  const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
+  treasureclassex.rows.forEach((row) => {
+    const treasureClass = row['Treasure Class'];
+    if (treasureClass === 'Runes 17') {
+      row.Prob1 = 3;
+      row.Prob2 = 16;
+    }
+    if (treasureClass === 'Runes 16') {
+      row.Prob3 = 15;
+      row.Prob4 = 7;
+    }
+    if (treasureClass === 'Runes 15') {
+      row.Prob3 = 14;
+      row.Prob4 = 7;
+    }
+    if (treasureClass === 'Runes 14') {
+      row.Prob3 = 13;
+      row.Prob4 = 8;
+    }
+    if (treasureClass === 'Runes 13') {
+      row.Prob3 = 12;
+      row.Prob4 = 8;
+    }
+    if (treasureClass === 'Runes 12') {
+      row.Prob3 = 11;
+      row.Prob4 = 4;
+    }
+    if (treasureClass === 'Runes 11') {
+      row.Prob3 = 10;
+    }
+    if (treasureClass === 'Runes 10') {
+      row.Prob3 = 9;
+    }
+    if (treasureClass === 'Runes 9') {
+      row.Prob3 = 8;
+    }
+    if (treasureClass === 'Runes 8') {
+      row.Prob3 = 7;
+    }
+    if (treasureClass === 'Runes 7') {
+      row.Prob3 = 6;
+    }
+    if (treasureClass === 'Runes 6') {
+      row.Prob3 = 5;
+    }
+    if (treasureClass === 'Runes 5') {
+      row.Prob3 = 4;
+    }
+    if (treasureClass === 'Runes 4') {
+      row.Prob3 = 3;
+    }
+    if (treasureClass === 'Runes 3') {
+      row.Prob3 = 3;
+    }
+    if (treasureClass === 'Runes 2') {
+      row.Prob3 = 3;
+    }
+  });
+  D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
+}
+
 // MrLamaSc character startup
 {
   const charstatsFilename = 'global\\excel\\charstats.txt';
