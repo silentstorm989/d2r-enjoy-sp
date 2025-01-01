@@ -675,13 +675,6 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     controllerHoradricCubeHDLayoutFilename,
     controllerHoradricCubeHDLayout
   );
-
-  D2RMM.copyFile(
-    'hd', // <mod folder>\hd
-    'hd', // <diablo 2 folder>\mods\<modname>\<modname>.mpq\data\hd
-    true // overwrite any conflicts
-  );
-
 }
 
 // MercEquip
@@ -2020,63 +2013,281 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
 
 // Improved rune drop
 {
+  function SetDefaultQuestProp(row, setNoDrop) {
+    row.Unique = 1024;
+    row.Set = 800;
+    row.Rare = 800;
+    row.Magic = 800;
+    if (setNoDrop) {
+      row.NoDrop = 0;
+    }
+  }
+  function SetQuestProp(row, pOne) {
+    SetDefaultQuestProp(row, true);
+    row.Item1 = 'gld,mul=2000';
+    row.Prob1 = pOne;
+  }
   const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
   const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
   treasureclassex.rows.forEach((row) => {
     const treasureClass = row['Treasure Class'];
-    if (treasureClass === 'Runes 17') {
-      row.Prob1 = 3;
-      row.Prob2 = 16;
+    // Improved rune drop
+    {
+      if (treasureClass === 'Runes 17') {
+        row.Prob1 = 3;
+        row.Prob2 = 16;
+      }
+      if (treasureClass === 'Runes 16') {
+        row.Prob3 = 15;
+        row.Prob4 = 7;
+      }
+      if (treasureClass === 'Runes 15') {
+        row.Prob3 = 14;
+        row.Prob4 = 7;
+      }
+      if (treasureClass === 'Runes 14') {
+        row.Prob3 = 13;
+        row.Prob4 = 8;
+      }
+      if (treasureClass === 'Runes 13') {
+        row.Prob3 = 12;
+        row.Prob4 = 8;
+      }
+      if (treasureClass === 'Runes 12') {
+        row.Prob3 = 11;
+        row.Prob4 = 4;
+      }
+      if (treasureClass === 'Runes 11') {
+        row.Prob3 = 10;
+      }
+      if (treasureClass === 'Runes 10') {
+        row.Prob3 = 9;
+      }
+      if (treasureClass === 'Runes 9') {
+        row.Prob3 = 8;
+      }
+      if (treasureClass === 'Runes 8') {
+        row.Prob3 = 7;
+      }
+      if (treasureClass === 'Runes 7') {
+        row.Prob3 = 6;
+      }
+      if (treasureClass === 'Runes 6') {
+        row.Prob3 = 5;
+      }
+      if (treasureClass === 'Runes 5') {
+        row.Prob3 = 4;
+      }
+      if (treasureClass === 'Runes 4') {
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Runes 3') {
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Runes 2') {
+        row.Prob3 = 3;
+      }
     }
-    if (treasureClass === 'Runes 16') {
-      row.Prob3 = 15;
-      row.Prob4 = 7;
-    }
-    if (treasureClass === 'Runes 15') {
-      row.Prob3 = 14;
-      row.Prob4 = 7;
-    }
-    if (treasureClass === 'Runes 14') {
-      row.Prob3 = 13;
-      row.Prob4 = 8;
-    }
-    if (treasureClass === 'Runes 13') {
-      row.Prob3 = 12;
-      row.Prob4 = 8;
-    }
-    if (treasureClass === 'Runes 12') {
-      row.Prob3 = 11;
-      row.Prob4 = 4;
-    }
-    if (treasureClass === 'Runes 11') {
-      row.Prob3 = 10;
-    }
-    if (treasureClass === 'Runes 10') {
-      row.Prob3 = 9;
-    }
-    if (treasureClass === 'Runes 9') {
-      row.Prob3 = 8;
-    }
-    if (treasureClass === 'Runes 8') {
-      row.Prob3 = 7;
-    }
-    if (treasureClass === 'Runes 7') {
-      row.Prob3 = 6;
-    }
-    if (treasureClass === 'Runes 6') {
-      row.Prob3 = 5;
-    }
-    if (treasureClass === 'Runes 5') {
-      row.Prob3 = 4;
-    }
-    if (treasureClass === 'Runes 4') {
-      row.Prob3 = 3;
-    }
-    if (treasureClass === 'Runes 3') {
-      row.Prob3 = 3;
-    }
-    if (treasureClass === 'Runes 2') {
-      row.Prob3 = 3;
+    // Increased general drop rate
+    {
+      if (treasureClass === 'Andariel') {
+        SetQuestProp(row, 5);
+        row.Prob2 = 15;
+        row.Item3 = 'Act 2 Equip C';
+        row.Prob3 = 5;
+        row.Item4 = 'rin';
+        row.Prob4 = 2;
+      }
+      if (treasureClass === 'Andarielq') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Item2 = 'Act 2 Equip C';
+        row.Prob2 = 5;
+        row.Item3 = 'Act 2 Good';
+        row.Prob3 = 1;
+      }
+      if (treasureClass === 'Baal') {
+        SetQuestProp(row, 0);
+        row.Item2 = 'Act 1 (N) Equip C';
+        row.Item3 = 'Act 1 (N) Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Baalq') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 25;
+      }
+      if (treasureClass === 'Blood Raven') {
+        SetQuestProp(row, 6);
+        row.Item2 = 'Act 1 Equip A';
+        row.Prob2 = 14;
+        row.Item3 = 'Act 1 Good';
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Countess') {
+        row.Picks = 5;
+        row.Unique = 1024;
+        row.Magic = 800;
+        row.Prob1 = 0;
+        row.Prob2 = 5;
+        row.Item3 = 'Act 2 Good';
+        row.Prob3 = 1;
+      }
+      if (treasureClass === 'Countess Rune') {
+        row.Item1 = 'Runes 5';
+      }
+      if (treasureClass === 'Council') {
+        row.Unique = 999;
+        row.Set = 997;
+        row.Magic = 800;
+        row.NoDrop = 0;
+        row.Item1 = 'gld,mul=3280';
+        row.Prob1 = 6;
+        row.Item3 = 'Act 4 Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+        row.Item5 = '';
+        row.Prob5 = '';
+      }
+      if (treasureClass === 'Cow') {
+        row.Item3 = 'Act 5 Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Cow King') {
+        row.Picks = 7;
+      }
+      if (treasureClass === 'Diablo') {
+        SetQuestProp(row, 4);
+        row.Prob2 = 15;
+        row.Item3 = 'Act 5 Equip C';
+        row.Prob3 = 3;
+        row.Prob4 = 5;
+      }
+      if (treasureClass === 'Diabloq') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Prob2 = 1;
+        row.Item3 = 'Act 5 Equip C';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Duriel') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
+      if (treasureClass === 'Duriel - Base') {
+        SetQuestProp(row, 11);
+        row.Item3 = 'Act 3 Equip A';
+        row.Prob3 = 3;
+        row.Prob4 = 2;
+      }
+      if (treasureClass === 'Durielq') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
+      if (treasureClass === 'Durielq - Base') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Prob2 = 1;
+        row.Item3 = 'Act 3 Equip B';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Flying Scimitar') {
+        row.Unique = 999;
+        row.Set = 899;
+        row.Rare = 850;
+        row.Magic = 800;
+        row.NoDrop = 0;
+        row.Prob1 = 11;
+        row.Prob2 = 7;
+      }
+      if (treasureClass === 'Griswold') {
+        row.Picks = 4;
+        SetDefaultQuestProp(row, false);
+        row.Item1 = 'Act 2 Uitem C';
+        row.Prob1 = 8;
+        row.Item2 = 'Act 2 Melee A';
+        row.Prob2 = 15;
+        row.Item3 = 'bsd';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Haphesto') {
+        row.Picks = 4;
+        SetQuestProp(row, 5);
+        row.Item2 = 'Act 4 Equip A';
+        row.Item3 = 'Act 5 Good';
+        row.Prob3 = 4;
+        row.Prob4 = 2;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Izual') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'gld,mul=2280';
+        row.Prob1 = 8;
+        row.Item3 = 'Act 4 Good';
+        row.Prob3 = 8;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Mephisto') {
+        SetQuestProp(row, 4);
+        row.Prob2 = 15;
+        row.Item3 = 'Act 5 Equip A';
+        row.Prob3 = 3;
+        row.Prob4 = 5;
+      }
+      if (treasureClass === 'Mephistoq') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Prob2 = 1;
+        row.Item3 = 'Act 5 Equip A';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Nihlathak') {
+        row.Picks = 6;
+        SetQuestProp(row, 5);
+        row.Item2 = 'Act 5 Equip C';
+        row.Item3 = 'Act 5 Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Radament') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'gld,mul=2280';
+        row.Prob1 = 3;
+        row.Item2 = 'Act 3 Equip A';
+        row.Prob2 = 15;
+        row.Item3 = 'Act 3 Good';
+        row.Prob3 = 7;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Smith') {
+        row.Picks = 3;
+        row.Unique = 1024;
+        row.Set = 800;
+        row.Rare = 800;
+        row.Magic = 800;
+      }
+      if (treasureClass === 'Summoner') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'gld,mul=2280';
+        row.Prob1 = 4;
+        row.Item3 = 'Act 2 Good';
+        row.Prob3 = 2;
+        row.Item4 = 'Act 3 Equip A';
+        row.Prob4 = 4;
+        row.Item5 = '';
+        row.Prob5 = '';
+      }
     }
   });
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
