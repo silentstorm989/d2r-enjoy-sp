@@ -2011,7 +2011,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeJson(itemRunesFilename, itemRunes);
 }
 
-// Improved rune drop
+// Improved rune drop and general drop rate
 {
   function SetDefaultQuestProp(row, setNoDrop) {
     row.Unique = 1024;
@@ -2291,6 +2291,120 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     }
   });
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
+}
+
+// Removed the gems from the rune upgrade recipes. 
+// - Up until Pul: 3 of the same runes = next rune
+// - After Pul: 2 of a kind + jewel = next rune
+{
+  const cubemainFilename = 'global\\excel\\cubemain.txt';
+  const cubemain = D2RMM.readTsv(cubemainFilename);
+  cubemain.rows.forEach((row) => {
+    if (row.description === '3 Thul Runes + 1 Chipped Topaz -> Amn Rune') {
+      row.description = '3 Thul Runes -> Amn Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Amn Runes + 1 Chipped Amethyst -> Sol Rune') {
+      row.description = '3 Amn Runes -> Sol Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Sol Runes + 1 Chipped Sapphire -> Shael Rune') {
+      row.description = '3 Sol Runes -> Shael Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Shael Runes + 1 Chipped Ruby -> Dol Rune') {
+      row.description = '3 Shael Runes -> Dol Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Dol Runes + 1 Chipped Emerald -> Hel Rune') {
+      row.description = '3 Dol Runes -> Hel Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Hel Runes + 1 Chipped Diamond -> Io Rune') {
+      row.description = '3 Hel Runes -> Io Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Io Runes + 1 Flawed Topaz -> Lum Rune') {
+      row.description = '3 Io Runes -> Lum Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Lum Runes + 1 Flawed Amethyst -> Ko Rune') {
+      row.description = '3 Lum Runes -> Ko Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Ko Runes + 1 Flawed Sapphire -> Fal Rune') {
+      row.description = '3 Ko Runes -> Fal Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Fal Runes + 1 Flawed Ruby -> Lem Rune') {
+      row.description = '3 Fal Runes -> Lem Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '3 Lem Runes + 1 Flawed Emerald -> Pul Rune') {
+      row.description = '3 Lem Runes -> Pul Rune';
+      row.numinputs = 3;
+      row['input 2'] = '';
+    }
+    if (row.description === '2 Pul Runes + 1 Flawed Diamond -> Um Rune') {
+      row.description = '2 Pul Runes + 1 Jewel -> Um Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Um Runes + 1 Standard Topaz -> Mal Rune') {
+      row.description = '2 Um Runes + 1 Jewel -> Mal Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Mal Runes + 1 Standard Amethyst -> Ist Rune') {
+      row.description = '2 Mal Runes + 1 Jewel -> Ist Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Ist Runes + 1 Standard Sapphire -> Gul Rune') {
+      row.description = '2 Ist Runes + 1 Jewel -> Gul Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Gul Runes + 1 Standard Ruby -> Vex Rune') {
+      row.description = '2 Gul Runes + 1 Jewel -> Vex Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Vex Runes + 1 Standard Emerald -> Ohm Rune') {
+      row.description = '2 Vex Runes + 1 Jewel -> Ohm Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Ohm Runes + 1 Standard Diamond -> Lo Rune') {
+      row.description = '2 Ohm Runes + 1 Jewel -> Lo Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Lo Runes + 1 Flawless Topaz -> Sur Rune') {
+      row.description = '2 Lo Runes + 1 Jewel -> Sur Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Sur Runes + 1 Flawless Amethyst -> Ber Rune') {
+      row.description = '2 Sur Runes + 1 Jewel -> Ber Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Ber Runes + 1 Flawless Sapphire -> Jah Rune') {
+      row.description = '2 Ber Runes + 1 Jewel -> Jah Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Jah Runes + 1 Flawless Ruby -> Cham Rune') {
+      row.description = '2 Jah Runes + 1 Jewel -> Cham Rune';
+      row['input 2'] = 'jew';
+    }
+    if (row.description === '2 Cham Runes + 1 Flawless Emerald -> Zod Rune') {
+      row.description = '2 Cham Runes + Jewel -> Zod Rune';
+      row['input 2'] = 'jew';
+    }
+  });
+  D2RMM.writeTsv(cubemainFilename, cubemain);
 }
 
 // MrLamaSc character startup
