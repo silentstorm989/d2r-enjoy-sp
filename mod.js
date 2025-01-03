@@ -2411,6 +2411,14 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
       row['input 2'] = 'tsc';
       row['input 3'] = '';
     }
+    if (row.description === '1 Twisted Essence of Suffering + 1 Charged Essence of Hatred + 1 Burning Essence of Terror + 1 Festering Essence of Destruction -> Token of Absolution') {
+      row.description = 'Token of Absolution',
+      row.numinputs = 2;
+      row['input 1'] = 'tsc';
+      row['input 2'] = 'isc';
+      row['input 3'] = '';
+      row['input 4'] = '';
+    }
   });
   D2RMM.writeTsv(cubemainFilename, cubemain);
 }
