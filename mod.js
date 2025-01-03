@@ -2407,8 +2407,9 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     if (row.description === '1 Hel Rune + Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item') {
       row.description = 'Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item';
       row.numinputs = 2;
+      row['input 1'] = 'any,sock';
       row['input 2'] = 'tsc';
-      row['input 2'] = '';
+      row['input 3'] = '';
     }
   });
   D2RMM.writeTsv(cubemainFilename, cubemain);
@@ -2418,13 +2419,14 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
 {
   const cubemainFilename = 'global\\excel\\cubemain.txt';
   const cubemain = D2RMM.readTsv(cubemainFilename);
+  // Add upto 4 Sockets with number of Perfect Gems.  5 & 6 Sockets use Perfect Skulls
   for (let sockets = 1; sockets <= 6; sockets = sockets + 1) {
     const socketRecipe = {
-      description: `"${sockets} Perfect Gem"`,
+      description: `${sockets} Perfect Gem`,
       enabled: 1,
       version: 100,
       numinputs: sockets + 1,
-      'input 2': `"gem4,qty=${sockets}"`,
+      'input 2': `gem4,qty=${sockets}`,
       output: 'useitem',
       'mod 1': 'sock',
       'mod 1 min': sockets,
@@ -2434,25 +2436,139 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     function addRecipeNormal(code, name) {
       cubemain.rows.push({
         ...socketRecipe,
-        description: `${socketRecipe.description} + Normal ${name} -> Socketed Normal ${name}`,
-        'input 1': `"${code},nor,nos"`
+        description: `${socketRecipe.description} + Normal ${name} -> Socket Normal ${name} ${sockets}`,
+        'input 1': `${code},nor,nos`
       });
     }
     function addRecipeSpecial(code, name) {
       cubemain.rows.push({
         ...socketRecipe,
-        description: `${socketRecipe.description} + Special ${name} -> Socketed Special ${name}`,
-        'input 1': `"${code},hiq,nos"`
+        description: `${socketRecipe.description} + Special ${name} -> Socket Special ${name} ${sockets}`,
+        'input 1': `${code},hiq,nos`
       });
     }
-    addRecipeNormal('helm', 'Helm');
-    addRecipeNormal('shld', 'Shield');
-    addRecipeNormal('tors', 'Torso');
-    addRecipeNormal('weap', 'Weapon');
-    addRecipeSpecial('helm', 'Helm');
-    addRecipeSpecial('shld', 'Shield');
-    addRecipeSpecial('tors', 'Torso');
-    addRecipeSpecial('weap', 'Weapon');
+    function addRecipeNormalSkull(code, quantity) {
+      cubemain.rows.push({
+        ...socketRecipe,
+        description: `Perfect Skull + Normal or Unique Weapon -> Socket Normal or Unique ${sockets}`,
+        numinputs: quantity + 2,
+        'input 1': `weap,${code},nos`,
+        'input 2': `ring,uni`,
+        'input 3': `skz,qty=${quantity}`,
+      });
+    }
+    if (sockets <= 4) {
+      addRecipeNormal('helm', 'Helm');
+      addRecipeNormal('shld', 'Shield');
+      addRecipeNormal('tors', 'Torso');
+      addRecipeNormal('weap', 'Weapon');
+      addRecipeSpecial('helm', 'Helm');
+      addRecipeSpecial('shld', 'Shield');
+      addRecipeSpecial('tors', 'Torso');
+      addRecipeSpecial('weap', 'Weapon');
+    }
+    if (sockets === 5) {
+      addRecipeNormalSkull('nor', 1);
+      addRecipeNormalSkull('hiq', 1);
+    }
+    if (sockets === 6) {
+      addRecipeNormalSkull('nor', 2);
+      addRecipeNormalSkull('hiq', 2);
+    }
+  }
+
+  // Perfect Skull and Ring
+  {
+    const socketRecipe = {
+      description: `1 Unique Rings`,
+      enabled: 1,
+      version: 100,
+      numinputs: 3,
+      'input 2': 'ring,uni',
+      'input 3': 'skz,qty=1',
+      'mod 1': 'sock',
+      'mod 1 min': 5,
+      'mod 1 max': 5,
+      output: 'useitem',
+      '*eol': 0,
+    };
+
+    function addRecipeRingPerfectSkullNormal(code, name, nRings) {
+      const sockets = nRings === 1 ? 5 : 6;
+      cubemain.rows.push({
+        ...socketRecipe,
+        description: `${socketRecipe.description} ${nRings} Perfect Skull + Normal ${name} -> Socket ${name} ${sockets}`,
+        'input 1': `${code},nor,nos`,
+        numinputs: nRings + 2,
+        'input 3': `skz,qty=${nRings}`,
+        'mod 1 min': sockets,
+        'mod 1 max': sockets,
+      });
+    }
+
+    function addRecipeRingPerfectSkullSpecial(code, name, nRings) {
+      const sockets = nRings === 1 ? 5 : 6;
+      cubemain.rows.push({
+        ...socketRecipe,
+        description: `${socketRecipe.description} ${nRings} Perfect Skull + Special ${name} -> Socket ${name} ${sockets}`,
+        'input 1': `${code},hiq,nos`,
+        numinputs: nRings + 2,
+        'input 3': `skz,qty=${nRings}`,
+        'mod 1 min': sockets,
+        'mod 1 max': sockets,
+      });
+    }
+
+    addRecipeRingPerfectSkullNormal('weap', 'Weapon', 1);
+    addRecipeRingPerfectSkullNormal('weap', 'Weapon', 2);
+    addRecipeRingPerfectSkullSpecial('weap', 'Weapon', 1);
+    addRecipeRingPerfectSkullSpecial('weap', 'Weapon', 2);
+  }
+
+  // Perfect Skull and Set Item
+  {
+    const socketRecipe = {
+      description: `1 Perfect Skull + 1 Set Item -> 1 Socket Set Item`,
+      enabled: 1,
+      version: 100,
+      numinputs: 2,
+      'input 1': `any,set`,
+      'input 2': 'skz,qty=1',
+      'mod 1': `sock`,
+      'mod 1 min': 1,
+      'mod 1 max': 1,
+      output: 'useitem',
+      '*eol': 0,
+    };
+
+    function addRecipe() {
+      cubemain.rows.push({ ...socketRecipe });
+    }
+
+    addRecipe();
+  }
+
+  // Perfect Gem and Unique Item
+  {
+    const socketRecipe = {
+      description: `1 Perfect Gem + 1 Unique Item -> 1 Socket Set Item`,
+      enabled: 1,
+      version: 100,
+      numinputs: 2,
+      'input 1': `any,uni`,
+      'input 2': 'gem4,qty=1',
+      'mod 1': `sock`,
+      'mod 1 min': 1,
+      'mod 1 max': 1,
+      output: 'useitem',
+      '*eol': 0,
+    };
+
+    function addRecipe() {
+      cubemain.rows.push({ ...socketRecipe });
+    }
+
+    addRecipe();
   }
   D2RMM.writeTsv(cubemainFilename, cubemain);
 }
@@ -2480,6 +2596,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(charstatsFilename, charstats);
 }
 
+// Move Cain
 {
   if (config["act5_options"] == "stash") {
     D2RMM.copyFile(
