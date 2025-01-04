@@ -2088,7 +2088,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob3 = 3;
       }
     }
-    // Increased general drop rate
+    // Increased general drop rate from Bosses
     {
       if (treasureClass === 'Andariel') {
         SetQuestProp(row, 5);
@@ -2289,6 +2289,204 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob5 = '';
       }
     }
+    // Increased more drop rates.
+    {
+      const chestLevel = ["A", "B", "C"];
+      const diffLevel = ['', '(N) ', '(H) '];
+      for (let acts = 1; acts <= 5; acts = acts + 1) {
+        for (let level = 0; level < 3; level = level + 1) {
+          for (let diff = 0; diff < 3; diff = diff + 1) {
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Cast ${chestLevel[level]}`) {
+              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              row.Prob3 = 2;
+              row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic ${chestLevel[level]}`;
+              row.Prob4 = 7;
+              row.Item5 = '';
+              row.Prob5 = '';
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Chest ${chestLevel[level]}`) {
+              if(acts === 5){
+                row.Prob2 = 10;
+              }
+              else{
+                row.Prob2 = 15;
+              }
+              row.NoDrop = 50;
+              row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              row.Prob3 = 4;
+              row.Item4 = '';
+              row.Prob4 = '';
+              row.Item5 = '';
+              row.Prob5 = '';
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}H2H ${chestLevel[level]}`) {
+              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              row.Prob3 = 2;
+              row.Item4 = '';
+              row.Prob4 = '';
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Miss ${chestLevel[level]}`) {
+              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              row.Prob3 = 2;
+              row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+              row.Prob4 = 6;
+              row.Item5 = 'Ammo';
+              row.Prob5 = 3;
+              row.Item6 = '';
+              row.Prob6 = '';
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super ${chestLevel[level]}`) {
+              if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super A`) {
+                // Act 1
+                if (acts === 1) {
+                  // Normal
+                  if (diff === 0) {
+                    row.level = 5;
+                    row.Prob1 = 14;
+                  }
+                  // Nightmare
+                  if (diff === 1) {
+                    row.Prob1 = 14;
+                  }
+                  // Hell
+                  if (diff === 2) {
+                    row.Prob1 = 12;
+                  }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 6;
+                }
+                // Act 2
+                if (acts === 2) {
+                  // Normal
+                  if (diff === 0) {
+                    row.level = 12;
+                  }
+                  // Nightmare
+                  if (diff === 1) {
+                    row.level = 44;
+                  }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Prob1 = 15;
+                  row.Prob2 = 7;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 6;
+                }
+                // Act 3
+                if (acts === 3) {
+                  // Normal
+                  if (diff === 0) {
+                    row.Prob1 = 12;
+                  }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Prob2 = 7;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 6;
+                }
+                // Act 4
+                if (acts === 4) {
+                  // Normal
+                  if (diff === 0) {
+                    row.level = 26;
+                    row.Prob1 = 15;
+                  }
+                  // Nightmare
+                  if (diff === 1) {
+                    row.Prob1 = 12;
+                  }
+                  // Hell
+                  if (diff === 2) {
+                    row.Prob1 = 12;
+                  }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip B`;
+                  row.Prob2 = 12;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 3;
+                }
+                // Act 5
+                if (acts === 5) {
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Prob1 = 15;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Prob2 = 7;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 3;
+                }
+              }
+              else if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super B`) {
+                if (acts === 1) {
+                  // Normal
+                  if (diff === 0) {
+                    row.level = 7;
+                    row.Prob1 = 14;
+                  }
+                  if (diff === 1) {
+                    row.Prob1 = 15;
+                  }
+                  if (diff === 2) {
+                    row.Prob1 = 12;
+                  }
+                }
+                if (acts === 2) {
+                  row.Prob1 = 15;
+                }
+                if (acts === 4) {
+                  row.Prob1 = 15;
+                  row.Prob2 = 12;
+                }
+                if (acts === 5) {
+                  row.Prob1 = 15;
+                }
+                row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                row.Prob3 = 3;
+              }
+              else if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super C`) {
+                // Act 5
+                if (acts === 5) {
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob2 = 3;
+                }
+                else {
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip B`;
+                  row.Prob2 = 12;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 3;
+                }
+                row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                row.Prob1 = 15;
+              }
+              row.Picks = 5;
+              row.Set = 1024;
+              row.Rare = 800;
+              row.Magic = 800;
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super ${chestLevel[level]}x`) {
+              row.group = 18;
+              row.Picks = 5;
+              row.Magic = 900;
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Unique ${chestLevel[level]}`) {
+              row.Picks = 3;
+              row.Unique = 933;
+              row.Set = 1010;
+              row.Rare = 800;
+              row.Magic = 800;
+              row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+              row.Prob1 = 11;
+              row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+              row.Prob2 = 1;
+            }
+          }
+        }
+      }
+    }
   });
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
 }
@@ -2413,7 +2611,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
     }
     if (row.description === '1 Twisted Essence of Suffering + 1 Charged Essence of Hatred + 1 Burning Essence of Terror + 1 Festering Essence of Destruction -> Token of Absolution') {
       row.description = 'Token of Absolution',
-      row.numinputs = 2;
+        row.numinputs = 2;
       row['input 1'] = 'tsc';
       row['input 2'] = 'isc';
       row['input 3'] = '';
