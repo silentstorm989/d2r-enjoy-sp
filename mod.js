@@ -2297,7 +2297,18 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         for (let level = 0; level < 3; level = level + 1) {
           for (let diff = 0; diff < 3; diff = diff + 1) {
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}Cast ${chestLevel[level]}`) {
-              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              // Changed for Act 2 Cast C
+              if (acts === 2) {
+                if (chestLevel[level] === "C") {
+                  row.Item3 = `Act 3 ${diffLevel[diff]}Good`;
+                }
+                else {
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                }
+              }
+              else {
+                row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              }
               row.Prob3 = 2;
               row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic ${chestLevel[level]}`;
               row.Prob4 = 7;
@@ -2305,10 +2316,52 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
               row.Prob5 = '';
             }
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}Chest ${chestLevel[level]}`) {
-              if(acts === 5){
+              // Act 1
+              if (acts === 1) {
+                // Nightmare
+                if (diff === 1) {
+                  row.Prob2 = 10;
+                }
+                // Hell
+                else if (diff === 2) {
+                  row.Prob2 = 10;
+                }
+                else {
+                  if (chestLevel[level] === "C") {
+                    row.Prob2 = 15;
+                  }
+                  else {
+                    row.Prob2 = 10;
+                  }
+                }
+              }
+              // Act 2
+              else if (acts === 2) {
+                if (chestLevel[level] === "C") {
+                  if (diff === 1 || diff === 2) {
+                    row.Prob2 = 10;
+                  }
+                  else {
+                    row.Prob2 = 15;
+                  }
+                }
+                else {
+                  row.Prob2 = 10;
+                }
+              }
+              // Act 3
+              else if (acts === 3) {
                 row.Prob2 = 10;
               }
-              else{
+              // Act 4
+              else if (acts === 4) {
+                row.Prob2 = 10;
+              }
+              // Act
+              else if (acts === 5) {
+                row.Prob2 = 10;
+              }
+              else {
                 row.Prob2 = 15;
               }
               row.NoDrop = 50;
@@ -2366,7 +2419,10 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                   }
                   // Nightmare
                   if (diff === 1) {
-                    row.level = 44;
+                    //row.level = 44;
+                  }
+                  if (diff === 2) {
+
                   }
                   row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
                   row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
@@ -2381,6 +2437,14 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                   if (diff === 0) {
                     row.Prob1 = 12;
                   }
+                  // Nightmare
+                  if (diff === 1) {
+                    row.Prob1 = 15;
+                  }
+                  // Hell
+                  if (diff === 2) {
+                    row.Prob1 = 15;
+                  }
                   row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
                   row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
                   row.Prob2 = 7;
@@ -2392,7 +2456,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                   // Normal
                   if (diff === 0) {
                     row.level = 26;
-                    row.Prob1 = 15;
+                    row.Prob1 = 1;
                   }
                   // Nightmare
                   if (diff === 1) {
@@ -2424,43 +2488,107 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                   if (diff === 0) {
                     row.level = 7;
                     row.Prob1 = 14;
+                    row.Prob3 = 6;
                   }
+                  // Nightmare
                   if (diff === 1) {
-                    row.Prob1 = 15;
+                    row.Prob1 = 14;
+                    row.Prob3 = 6;
                   }
+                  // Hell
                   if (diff === 2) {
                     row.Prob1 = 12;
+                    row.Prob3 = 6;
                   }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
                 }
                 if (acts === 2) {
                   row.Prob1 = 15;
+                  row.Prob3 = 6;
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                }
+                if (acts === 3) {
+                  row.Prob1 = 15;
+                  row.Prob3 = 6;
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
                 }
                 if (acts === 4) {
-                  row.Prob1 = 15;
+                  if (diff === 1) {
+                    row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                    row.Prob1 = 12;
+                    row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip B`;
+                    row.Prob3 = 3;
+                  }
+                  else if(diff === 2){
+                    row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                    row.Prob1 = 12;
+                    row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip B`;
+                    row.Prob3 = 3;
+                  }
+                  else {
+                    row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                    row.Prob1 = 12;
+                    row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                    row.Prob3 = 3;
+                  }
                   row.Prob2 = 12;
                 }
                 if (acts === 5) {
                   row.Prob1 = 15;
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
+                  row.Prob3 = 3;
                 }
-                row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
-                row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip C`;
                 row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
-                row.Prob3 = 3;
+
               }
               else if (treasureClass === `Act ${acts} ${diffLevel[diff]}Super C`) {
-                // Act 5
-                if (acts === 5) {
-                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
-                  row.Prob2 = 3;
+                // Act 1
+                if (acts === 1) {
+                  // Hell
+                  if (diff === 2) {
+                    row.Prob2 = 2;
+                  }
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Prob1 = 15;
+                  row.Item2 = `Act 2 ${diffLevel[diff]}Equip A`;
+                  row.Prob3 = 6;
                 }
-                else {
+                // Act 2
+                if (acts === 2) {
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Prob1 = 15;
+                  row.Item2 = `Act 3 ${diffLevel[diff]}Equip A`;
+                  row.Prob3 = 6;
+                } // Act 3
+                if (acts === 3) {
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip A`;
+                  row.Prob1 = 15;
+                  row.Item2 = `Act 4 ${diffLevel[diff]}Equip A`;
+                  row.Prob2 = 2;
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob3 = 6;
+                }
+                // Act 4
+                if (acts === 4)
+                {
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Prob1 = 12;
                   row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip B`;
                   row.Prob2 = 12;
                   row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
                   row.Prob3 = 3;
                 }
-                row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
-                row.Prob1 = 15;
+                // Act 5
+                if (acts === 5) {
+                  row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
+                  row.Prob1 = 15;
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  row.Prob2 = 3;
+                }
               }
               row.Picks = 5;
               row.Set = 1024;
