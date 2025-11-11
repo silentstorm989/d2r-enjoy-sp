@@ -2171,6 +2171,20 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item4 = '';
         row.Prob4 = '';
       }
+      if (treasureClass === 'Blood Raven (H)') {
+        row.Unique = 1024;
+        row.Set = 850;
+        row.Rare = 850;
+        row.Magic = 800;
+        row.NoDrop = 0;
+        row.Item1 = 'gld,mul=4048';
+        row.Prob1 = 11;
+        row.Item2 = 'Act 1 (H) Equip A';
+        row.Prob2 = 33;
+        row.Item3 = '6lw';
+        row.Prob3 = 1;
+        row.Prob4 = 9;
+      }
       if (treasureClass === 'Countess') {
         row.Picks = 5;
         row.Unique = 1024;
@@ -2188,6 +2202,17 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob2 = 5;
         row.Item3 = 'Act 2 (N) Good';
         row.Prob3 = 1;
+      }
+      if (treasureClass === 'Countess (H)') {
+        row.Picks = 5;
+        row.Unique = 1024;
+        row.Magic = 800;
+        row.Prob1 = 0;
+        row.Prob2 = 5;
+        row.Item3 = 'Act 2 (H) Good';
+        row.Prob3 = 1;
+        row.Item4 = 'pk1';
+        row.Prob4 = 1;
       }
       if (treasureClass === 'Countess Rune') {
         row.Item1 = 'Runes 5';
@@ -3140,6 +3165,15 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
           }
         }
       }
+    }
+    if (treasureClass === 'Chipped Gem') {
+      row.Prob1 = 10;
+      row.Prob2 = 6;
+      row.Prob3 = 6;
+      row.Prob4 = 6;
+      row.Prob5 = 6;
+      row.Prob6 = 6;
+      row.Prob7 = 6;
     }
   });
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
