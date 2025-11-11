@@ -2108,6 +2108,15 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item4 = 'Act 2 (N) Good';
         row.Prob4 = 3;
       }
+      if (treasureClass === 'Andariel (H)') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'gld,mul=4048';
+        row.Prob1 = 5;
+        row.Item3 = 'Act 2 (H) Equip C';
+        row.Prob3 = 7;
+        row.Prob4 = 5;
+        row.Prob5 = 0;
+      }
       if (treasureClass === 'Andarielq') {
         SetDefaultQuestProp(row, true);
         row.Prob1 = 22;
@@ -2122,6 +2131,13 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item2 = 'Act 2 (N) Good';
         row.Prob2 = 1;
         row.Item3 = 'Act 1 (N) Equip C';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Andarielq (H)') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Prob2 = 1;
+        row.Item3 = 'Act 1 (H) Equip C';
         row.Prob3 = 3;
       }
       if (treasureClass === 'Baal') {
@@ -2475,15 +2491,12 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                 // Normal
                 if (diff === 0) {
                   if (chestLevel[level] === "A") {
-                    //row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
                     row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic A`;
                   }
                   if (chestLevel[level] === "B") {
-                    //row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
                     row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic B`;
                   }
                   if (chestLevel[level] === "C") {
-                    //row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
                     row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic C`;
                   }
                 }
