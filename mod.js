@@ -2604,28 +2604,139 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
               }
               // Act 2
               else if (acts === 2) {
-                if (chestLevel[level] === "C") {
-                  if (diff === 1 || diff === 2) {
-                    row.Prob2 = 10;
+                // Hell
+                if (diff === 2) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 2 (H) Equip A`;
                   }
                   else {
+                    row.Item2 = `Act 2 (H) Equip B`;
+                  }
+                  row.Prob2 = 10;
+                }
+                // Nightmare
+                if (diff === 1) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 2 (N) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 2 (N) Equip B`;
+                  }
+                  row.Prob2 = 10;
+                }
+                // Normal
+                if (diff === 0) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 2 Equip A`;
+                    row.Prob2 = 10;
+                  }
+                  if (chestLevel[level] === "B") {
+                    row.Item2 = `Act 2 Equip B`;
+                    row.Prob2 = 10;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.Item2 = `Act 2 Equip C`;
                     row.Prob2 = 15;
                   }
-                }
-                else {
-                  row.Prob2 = 10;
                 }
               }
               // Act 3
               else if (acts === 3) {
+                // Hell
+                if (diff === 2) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 3 (H) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 3 (H) Equip B`;
+                  }
+                }
+                // Nightmare
+                if (diff === 1) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 3 (N) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 3 (N) Equip B`;
+                  }
+                }
+                // Normal
+                if (diff === 0) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 3 Equip A`;
+                  }
+                  if (chestLevel[level] === "B") {
+                    row.Item2 = `Act 3 Equip B`;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.Item2 = `Act 3 Equip C`;
+                  }
+                }
                 row.Prob2 = 10;
               }
               // Act 4
               else if (acts === 4) {
+                // Hell
+                if (diff === 2) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 4 (H) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 4 (H) Equip B`;
+                  }
+                }
+                // Nightmare
+                if (diff === 1) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 4 (N) Equip A`;
+                  }
+                  if (chestLevel[level] === "B") {
+                    row.Item2 = `Act 4 (N) Equip B`;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.Item2 = `Act 4 (N) Equip C`;
+                  }
+                }
+                // Normal
+                if (diff === 0) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 4 Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 4 Equip B`;
+                  }
+                }
                 row.Prob2 = 10;
               }
               // Act
               else if (acts === 5) {
+                 // Hell
+                if (diff === 2) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 5 (H) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 5 (H) Equip B`;
+                  }
+                }
+                // Nightmare
+                if (diff === 1) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 5 (N) Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 5 (N) Equip B`;
+                  }
+                }
+                // Normal
+                if (diff === 0) {
+                  if (chestLevel[level] === "A") {
+                    row.Item2 = `Act 5 Equip A`;
+                  }
+                  else {
+                    row.Item2 = `Act 5 Equip B`;
+                  }
+                }
                 row.Prob2 = 10;
               }
               else {
