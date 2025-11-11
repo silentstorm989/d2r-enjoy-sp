@@ -2432,6 +2432,25 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
       for (let acts = 1; acts <= 5; acts = acts + 1) {
         for (let level = 0; level < 3; level = level + 1) {
           for (let diff = 0; diff < 3; diff = diff + 1) {
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`) {
+              if (acts === 5) {
+                if (diff === 2) {
+                  if (chestLevel[level] === "B") {
+                    row.level = 70;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.level = 70;
+                    row.Prob1 = 0;
+                    row.Prob2 = 0;
+                    row.Prob3 = 0;
+                    row.Prob4 = 0;
+                    row.Prob6 = 5;
+                    row.Prob7 = 5;
+                    row.Prob8 = 5;
+                  }
+                }
+              }
+            }
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}Cast ${chestLevel[level]}`) {
               // Act 1
               if (acts === 1) {
@@ -2762,11 +2781,74 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
               row.Item5 = '';
               row.Prob5 = '';
             }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`) {
+              if (acts === 5) {
+                if (diff === 2) {
+                  if (chestLevel[level] === "B") {
+                    row.Prob1 = 1;
+                    row.Prob3 = 4;
+                    row.Prob4 = 6;
+                    row.Prob5 = 12;
+                    row.Prob6 = 6;
+                    row.Prob7 = 4;
+                    row.Prob8 = 3;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.Prob1 = 1;
+                    row.Prob3 = 4;
+                    row.Prob4 = 6;
+                    row.Prob5 = 11;
+                    row.Prob6 = 5;
+                    row.Prob7 = 5;
+                    row.Prob8 = 5;
+                  }
+                }
+              }
+            }
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}H2H ${chestLevel[level]}`) {
-              row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              if (acts === 2) {
+                if (diff === 0) {
+                  if (chestLevel[level] === "C") {
+                    row.Item3 = `Act 3 Good`;
+                  }
+                  else {
+                    row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  }
+                }
+                else {
+                  row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+                }
+              }
+              else {
+                row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
+              }
               row.Prob3 = 2;
               row.Item4 = '';
               row.Prob4 = '';
+            }
+            if (treasureClass === `Act ${acts} ${diffLevel[diff]}Melee ${chestLevel[level]}`) {
+              if (acts === 5) {
+                if (diff === 2) {
+                  if (chestLevel[level] === "B") {
+                    row.Prob1 = 2;
+                    row.Prob3 = 6;
+                    row.Prob4 = 3;
+                    row.Prob5 = 14;
+                    row.Prob6 = 7;
+                    row.Prob7 = 3;
+                    row.Prob8 = 3;
+                  }
+                  if (chestLevel[level] === "C") {
+                    row.Prob1 = 1;
+                    row.Prob3 = 3;
+                    row.Prob4 = 3;
+                    row.Prob5 = 11;
+                    row.Prob6 = 7;
+                    row.Prob7 = 4;
+                    row.Prob8 = 4;
+                  }
+                }
+              }
             }
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}Miss ${chestLevel[level]}`) {
               row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
@@ -3152,6 +3234,22 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
               row.Magic = 900;
             }
             if (treasureClass === `Act ${acts} ${diffLevel[diff]}Unique ${chestLevel[level]}`) {
+              if (acts === 2) {
+                if (diff === 0) {
+                  if (chestLevel[level] === "C") {
+                    row.Item2 = `Act 3 ${diffLevel[diff]}Good`;
+                  }
+                  else {
+                    row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+                  }
+                }
+                else {
+                  row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+                }
+              }
+              else {
+                row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
+              }
               row.Picks = 3;
               row.Unique = 933;
               row.Set = 1010;
@@ -3159,7 +3257,6 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
               row.Magic = 800;
               row.Item1 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
               row.Prob1 = 11;
-              row.Item2 = `Act ${acts} ${diffLevel[diff]}Good`;
               row.Prob2 = 1;
             }
           }
@@ -3174,6 +3271,33 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
       row.Prob5 = 6;
       row.Prob6 = 6;
       row.Prob7 = 6;
+    }
+    if (treasureClass === 'Flawed Gem') {
+      row.Prob7 = 3;
+    }
+    if (treasureClass === 'Normal Gem') {
+      row.Prob7 = 3;
+    }
+    if (treasureClass === 'Flawless Gem') {
+      row.Prob7 = 3;
+    }
+    if (treasureClass === 'Perfect Gem') {
+      row.Prob7 = 3;
+    }
+    if (treasureClass === 'Runes 12') {
+      row.Item4 = 'Runes 2';
+    }
+    if (treasureClass === 'Runes 13') {
+      row.Item4 = 'Runes 2';
+    }
+    if (treasureClass === 'Runes 14') {
+      row.Item4 = 'Runes 2';
+    }
+    if (treasureClass === 'Runes 15') {
+      row.Item4 = 'Runes 2';
+    }
+    if (treasureClass === 'Runes 16') {
+      row.Item4 = 'Runes 2';
     }
   });
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
