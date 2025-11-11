@@ -2474,19 +2474,6 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                     row.Item4 = `Act ${acts} ${diffLevel[diff]}Magic C`;
                   }
                 }
-                //if (chestLevel[level] === "C") {
-                // Normal
-                // if (diff === 0) {
-                //row.Item3 = `Act 3 ${diffLevel[diff]}Good`;
-                //}
-                //else {
-                //row.Item3 = `Act 2 ${diffLevel[diff]}Good`;
-                //row.Item4 = `Act 1 ${diffLevel[diff]}Magic B`;
-                //}
-                //}
-                //else {
-                //row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
-                //}
               }
               // Act 3
               else if (acts === 3) {
@@ -2743,7 +2730,6 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                 row.Prob2 = 15;
               }
               row.NoDrop = 50;
-              //row.Item2 = `Act ${acts} ${diffLevel[diff]}Equip ${chestLevel[level]}`;
               row.Item3 = `Act ${acts} ${diffLevel[diff]}Good`;
               row.Prob3 = 4;
               row.Item4 = '';
@@ -2781,6 +2767,119 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
                 }
                 else {
                   row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                }
+              }
+              else if(acts === 2)
+              {
+                // Hell
+                if(diff === 2)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                else
+                {
+                   row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                }
+                // Nightmare
+                if(diff === 1)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                // Normal
+                if(diff === 0)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item3 = `Act 3 ${diffLevel[diff]}Good`;
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+              }
+              else if(acts === 3)
+              {
+                // Hell
+                if(diff === 2)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                else
+                {
+                   row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                }
+                // Nightmare
+                if(diff === 1)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                // Normal
+                if(diff === 0)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item3 = `Act 3 ${diffLevel[diff]}Good`;
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+              }
+              else if(acts === 5)
+              {
+                // Hell
+                if(diff === 2)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                else
+                {
+                   row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                }
+                // Nightmare
+                if(diff === 1)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
+                }
+                // Normal
+                if(diff === 0)
+                {
+                  if (chestLevel[level] === "C") {
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow B`;
+                  }
+                  else{
+                    row.Item4 = `Act ${acts} ${diffLevel[diff]}Bow ${chestLevel[level]}`;
+                  }
                 }
               }
               else {
