@@ -2240,13 +2240,48 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Unique = 1024;
         row.Prob1 = 0;
       }
+      if (treasureClass === 'Duriel (N)') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
+      if (treasureClass === 'Duriel (H)') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
       if (treasureClass === 'Duriel - Base') {
         SetQuestProp(row, 11);
         row.Item3 = 'Act 3 Equip A';
         row.Prob3 = 3;
         row.Prob4 = 2;
       }
+      if (treasureClass === 'Duriel (N) - Base') {
+        SetQuestProp(row, 11);
+        row.Item1 = 'gld,mul=3536';
+        row.Item3 = 'Act 3 (N) Equip A';
+        row.Prob3 = 3;
+        row.Prob4 = 2;
+      }
+      if (treasureClass === 'Duriel (H) - Base') {
+        SetQuestProp(row, 11);
+        row.Item1 = 'gld,mul=4048';
+        row.Item3 = 'Act 3 (H) Equip A';
+        row.Prob3 = 3;
+        row.Prob4 = 2;
+        row.Prob5 = 0;
+      }
       if (treasureClass === 'Durielq') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
+      if (treasureClass === 'Durielq (N)') {
+        row.Picks = 7;
+        row.Unique = 1024;
+        row.Prob1 = 0;
+      }
+      if (treasureClass === 'Durielq (H)') {
         row.Picks = 7;
         row.Unique = 1024;
         row.Prob1 = 0;
@@ -2257,6 +2292,22 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob2 = 1;
         row.Item3 = 'Act 3 Equip B';
         row.Prob3 = 3;
+      }
+      if (treasureClass === 'Durielq (N) - Base') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 22;
+        row.Prob2 = 1;
+        row.Item3 = 'Act 3 (N) Equip B';
+        row.Prob3 = 3;
+      }
+      if (treasureClass === 'Durielq (H) - Base') {
+        SetDefaultQuestProp(row, true);
+        row.Prob1 = 44;
+        row.Prob2 = 3;
+        row.Item3 = 'Act 3 (H) Equip B';
+        row.Prob3 = 6;
+        row.Item4 = 'xrs';
+        row.Prob4 = 1;
       }
       if (treasureClass === 'Flying Scimitar') {
         row.Unique = 999;
