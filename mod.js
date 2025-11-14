@@ -3485,6 +3485,67 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(difficultyFilename, difficulty);
 }
 
+// D2SE_Enjoy-SP_Mod_1.7 implementation gamble.txt'
+{
+  const strArr = [
+    { name: 'Wand', 'code\r': 'wnd\r' },
+    { name: 'Yew Wand', 'code\r': 'ywn\r' },
+    { name: 'Bone Wand', 'code\r': 'bwn\r' },
+    { name: 'Grim Wand', 'code\r': 'gwn\r' },
+    { name: 'Eagle Orb', 'code\r': 'ob1\r' },
+    { name: 'Scepter', 'code\r': 'scp\r' },
+    { name: 'Grand Scepter', 'code\r': 'gsc\r' },
+    { name: 'War Scepter', 'code\r': 'wsp\r' },
+    { name: 'Short Staff', 'code\r': 'sst\r' },
+    { name: 'Long Staff', 'code\r': 'lst\r' },
+    { name: 'Gnarled Staff', 'code\r': 'cst\r' },
+    { name: 'Battle Staff', 'code\r': 'bst\r' },
+    { name: 'War Staff', 'code\r': 'wst\r' },
+    { name: 'Sacred Globe', 'code\r': 'ob2\r' },
+    { name: 'Smoked Sphere', 'code\r': 'ob3\r' },
+    { name: 'Clasped Orb', 'code\r': 'ob4\r' },
+    { name: 'Dragon Stone', 'code\r': 'ob5\r' },
+    { name: 'Stag Bow', 'code\r': 'am1\r' },
+    { name: 'Reflex Bow', 'code\r': 'am2\r' },
+    { name: 'Maiden Spear', 'code\r': 'am3\r' },
+    { name: 'Maiden Pike', 'code\r': 'am4\r' },
+    { name: 'Maiden Javelin', 'code\r': 'am5\r' },
+    { name: 'Wolf Head', 'code\r': 'dr1\r' },
+    { name: 'Hawk Helm', 'code\r': 'dr2\r' },
+    { name: 'Antlers', 'code\r': 'dr3\r' },
+    { name: 'Falcon Mask', 'code\r': 'dr4\r' },
+    { name: 'Spirit Mask', 'code\r': 'dr5\r' },
+    { name: 'Jawbone Cap', 'code\r': 'ba1\r' },
+    { name: 'Fanged Helm', 'code\r': 'ba2\r' },
+    { name: 'Horned Helm', 'code\r': 'ba3\r' },
+    { name: 'Assault Helmet', 'code\r': 'ba4\r' },
+    { name: 'Avenger Guard', 'code\r': 'ba5\r' },
+    { name: 'Targe', 'code\r': 'pa1\r' },
+    { name: 'Rondache', 'code\r': 'pa2\r' },
+    { name: 'Heraldic Shield', 'code\r': 'pa3\r' },
+    { name: 'Aerin Shield', 'code\r': 'pa4\r' },
+    { name: 'Crown Shield', 'code\r': 'pa5\r' },
+    { name: 'Preserved Head', 'code\r': 'ne1\r' },
+    { name: 'Zombie Head', 'code\r': 'ne2\r' },
+    { name: 'Unraveller Head', 'code\r': 'ne3\r' },
+    { name: 'Gargoyle Head', 'code\r': 'ne4\r' },
+    { name: 'Demon Head', 'code\r': 'ne5\r' }
+  ];
+  {
+    const gambleFilename = 'global\\excel\\gamble.txt';
+    const gamble = D2RMM.readTsv(gambleFilename);
+
+    function addGambling(i) {
+      gamble.rows.push({ ...i });
+      D2RMM.writeTsv(gambleFilename, gamble);
+    }
+
+    strArr.forEach((s) => {
+      addGambling(s);
+    });
+  }
+}
+
 // ShowItemLevel
 {
   if (config.weapons) {
