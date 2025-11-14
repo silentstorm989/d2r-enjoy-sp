@@ -3460,6 +3460,31 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(miscFilename, misc);
 }
 
+// D2SE_Enjoy-SP_Mod_1.7 implementation difficultylevels.txt'
+{
+  const difficultyFilename = 'global\\excel\\difficultylevels.txt';
+  const difficulty = D2RMM.readTsv(difficultyFilename);
+  difficulty.rows.forEach((row) => {
+    const theName = row['Name'];
+    if (theName === 'Normal') {
+      row.GambleRare = 35000;
+      row.GambleSet = 15000;
+      row.GambleUnique = 10000;
+    }
+    if (theName === 'Nightmare') {
+      row.GambleRare = 35000;
+      row.GambleSet = 15000;
+      row.GambleUnique = 10000;
+    }
+    if (theName === 'Hell') {
+      row.GambleRare = 35000;
+      row.GambleSet = 15000;
+      row.GambleUnique = 10000;
+    }
+  });
+  D2RMM.writeTsv(difficultyFilename, difficulty);
+}
+
 // ShowItemLevel
 {
   if (config.weapons) {
