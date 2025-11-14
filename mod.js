@@ -2088,6 +2088,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob3 = 3;
       }
     }
+
     // Increased general drop rate from Bosses
     {
       if (treasureClass === 'Andariel') {
@@ -2148,9 +2149,44 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item4 = '';
         row.Prob4 = '';
       }
+      if (treasureClass === 'Baal (N)') {
+        SetQuestProp(row, 0);
+        row.Item1 = 'gld,mul=3536';
+        row.Item2 = 'Act 1 (H) Equip C';
+        row.Item3 = 'Act 1 (H) Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
+      if (treasureClass === 'Baal (H)') {
+        SetQuestProp(row, 0);
+        row.Item1 = 'gld,mul=4048';
+        row.Item2 = 'Act 5 (H) Equip C';
+        row.Item3 = 'Act 5 (H) Good';
+        row.Prob3 = 3;
+        row.Item4 = 'fed';
+        row.Prob4 = 0;
+        row.Item5 = '';
+        row.Prob5 = '';
+      }
       if (treasureClass === 'Baalq') {
         SetDefaultQuestProp(row, true);
         row.Prob1 = 25;
+      }
+      if (treasureClass === 'Baalq (N)') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'Act 1 (H) Equip C';
+        row.Prob1 = 26;
+        row.Prob2 = 5;
+      }
+      if (treasureClass === 'Baalq (H)') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'Act 5 (H) Equip C';
+        row.Prob1 = 26;
+        row.Prob2 = 5;
+        row.Prob3 = 0;
+        row.Item4 = 'uar'
+        row.Prob4 = 1;
       }
       if (treasureClass === 'Blood Raven') {
         SetQuestProp(row, 6);
@@ -2223,6 +2259,18 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item2 = 'Runes 8';
         row.Prob2 = 1;
       }
+      if (treasureClass === 'Countess Rune (H)') {
+        row.Item1 = 'Runes 11';
+        row.Prob1 = 6;
+        row.Item2 = 'Runes 15';
+        row.Prob2 = 2;
+        row.Item3 = 'Runes 16';
+        row.Prob3 = 1;
+        row.Item4 = 'Runes 13';
+        row.Prob4 = 6;
+        row.Item5 = 'Runes 14';
+        row.Prob5 = 2;
+      }
       if (treasureClass === 'Council') {
         row.Unique = 999;
         row.Set = 997;
@@ -2231,6 +2279,34 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item1 = 'gld,mul=3280';
         row.Prob1 = 6;
         row.Item3 = 'Act 4 Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+        row.Item5 = '';
+        row.Prob5 = '';
+      }
+      if (treasureClass === 'Council (N)') {
+        row.Unique = 999;
+        row.Set = 997;
+        row.Magic = 800;
+        row.NoDrop = 0;
+        row.Item1 = 'gld,mul=4536';
+        row.Prob1 = 6;
+        row.Item3 = 'Act 4 (N) Good';
+        row.Prob3 = 3;
+        row.Item4 = '';
+        row.Prob4 = '';
+        row.Item5 = '';
+        row.Prob5 = '';
+      }
+      if (treasureClass === 'Council (H)') {
+        row.Unique = 999;
+        row.Set = 997;
+        row.Magic = 800;
+        row.NoDrop = 0;
+        row.Item1 = 'gld,mul=5048';
+        row.Prob1 = 6;
+        row.Item3 = 'Act 4 (H) Good';
         row.Prob3 = 3;
         row.Item4 = '';
         row.Prob4 = '';
@@ -2353,6 +2429,17 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item3 = 'bsd';
         row.Prob3 = 3;
       }
+      if (treasureClass === 'Griswold (N)') {
+        row.Picks = 4;
+        row.Unique = 999;
+        row.Set = 999;
+        row.Rare = 800;
+        row.Magic = 800;
+        row.Item1 = 'Act 1 (H) Uitem C';
+        row.Prob1 = 8;
+        row.Item2 = 'Act 1 (N) Melee B';
+        row.Prob2 = 15;
+      }
       if (treasureClass === 'Haphesto') {
         row.Picks = 4;
         SetQuestProp(row, 5);
@@ -2406,7 +2493,32 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Item4 = '';
         row.Prob4 = '';
       }
+      if (treasureClass === 'Radament (N)') {
+        SetDefaultQuestProp(row, true);
+        row.Item1 = 'gld,mul=3536';
+        row.Prob1 = 3;
+        row.Item2 = 'Act 3 (N) Equip A';
+        row.Prob2 = 3;
+        row.Item3 = 'Act 3 (N) Good';
+        row.Prob3 = 15;
+        row.Item4 = '';
+        row.Prob4 = '';
+      }
       if (treasureClass === 'Smith') {
+        row.Picks = 3;
+        row.Unique = 1024;
+        row.Set = 800;
+        row.Rare = 800;
+        row.Magic = 800;
+      }
+      if (treasureClass === 'Smith (N)') {
+        row.Picks = 3;
+        row.Unique = 1024;
+        row.Set = 800;
+        row.Rare = 800;
+        row.Magic = 800;
+      }
+      if (treasureClass === 'Smith (H)') {
         row.Picks = 3;
         row.Unique = 1024;
         row.Set = 800;
@@ -2425,6 +2537,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         row.Prob5 = '';
       }
     }
+
     // Increased more drop rates.
     {
       const chestLevel = ["A", "B", "C"];
@@ -3263,6 +3376,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
         }
       }
     }
+
     if (treasureClass === 'Chipped Gem') {
       row.Prob1 = 10;
       row.Prob2 = 6;
@@ -3303,6 +3417,7 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
 }
 
+// ShowItemLevel
 {
   if (config.weapons) {
     const miscFilename = 'global\\excel\\weapons.txt';
