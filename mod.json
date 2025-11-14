@@ -213,6 +213,41 @@
           ]
         }
       ]
+    },
+    {
+      "id": "weapons",
+      "type": "checkbox",
+      "name": "Weapons",
+      "description": "Show item level on weapons",
+      "defaultValue": true
+    },
+    {
+      "id": "armor",
+      "type": "checkbox",
+      "name": "Armor",
+      "description": "Show item level on armor",
+      "defaultValue": true
+    },
+    {
+      "id": "jewelry",
+      "type": "checkbox",
+      "name": "Rings & Amulets",
+      "description": "Show item level on rings and amulets",
+      "defaultValue": true
+    },
+    {
+      "id": "charms",
+      "type": "checkbox",
+      "name": "Charms",
+      "description": "Show item level on charms",
+      "defaultValue": true
+    },
+    {
+      "id": "jewels",
+      "type": "checkbox",
+      "name": "Jewels",
+      "description": "Show item level on jewels",
+      "defaultValue": true
     }
   ]
 }
