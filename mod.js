@@ -3417,6 +3417,49 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
 }
 
+// D2SE_Enjoy-SP_Mod_1.7 implementation Misc.txt
+{
+  const miscFilename = 'global\\excel\\misc.txt';
+  const misc = D2RMM.readTsv(miscFilename);
+  misc.rows.forEach((row) => {
+    const theName = row['name'];
+    if (theName === 'Tome of Town Portal') {
+      row.maxstack = 50;
+    }
+    if (theName === 'Tome of Identify') {
+      row.maxstack = 50;
+    }
+    if (theName === 'Key of Destruction') {
+      row.compactsave = 1;
+      row.spawnable = 1;
+      row.cost = 6666;
+      row.PermStoreItem = 1;
+      row.multibuy = 1;
+      row.AkaraMin = 1;
+      row.AkaraMax = 1;
+    }
+    if (theName === 'Key of Terror') {
+      row.compactsave = 1;
+      row.spawnable = 1;
+      row.cost = 6666;
+      row.PermStoreItem = 1;
+      row.multibuy = 1;
+      row.AkaraMin = 1;
+      row.AkaraMax = 1;
+    }
+    if (theName === 'Key of Hate') {
+      row.compactsave = 1;
+      row.spawnable = 1;
+      row.cost = 6666;
+      row.PermStoreItem = 1;
+      row.multibuy = 1;
+      row.AkaraMin = 1;
+      row.AkaraMax = 1;
+    }
+  });
+  D2RMM.writeTsv(miscFilename, misc);
+}
+
 // ShowItemLevel
 {
   if (config.weapons) {
