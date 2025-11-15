@@ -3546,6 +3546,58 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   }
 }
 
+// D2SE_Enjoy-SP_Mod_1.7 implementation shrines.txt'
+{
+  const shrinesFilename = 'global\\excel\\shrines.txt';
+  const shrines = D2RMM.readTsv(shrinesFilename);
+  shrines.rows.forEach((row) =>{
+    const theName = row['Name'];
+    if (theName === 'Armor Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Combat Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Resist Fire Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Resist Cold Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Resist Lightning Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Resist Poison Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Skill Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Mana Recharge Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+    if (theName === 'Experience Shrine') {
+      row['Duration in frames'] = 4800;
+    }
+  });
+  D2RMM.writeTsv(shrinesFilename, shrines);
+}
+
+// D2SE_Enjoy-SP_Mod_1.7 implementation experience.txt'
+{
+  const experienceFilename = 'global\\excel\\experience.txt';
+  const experience = D2RMM.readTsv(experienceFilename);
+  experience.rows.forEach((row) =>{
+    const lvl = row['Level'];
+    if(lvl > 69 && lvl < 99)
+    {
+      //console.log(row);
+      row['ExpRatio\r'] = '1024\r';
+    }
+  });
+   D2RMM.writeTsv(experienceFilename, experience);
+}
+
 // ShowItemLevel
 {
   if (config.weapons) {
