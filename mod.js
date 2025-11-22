@@ -1528,489 +1528,6 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeJson(hirelingCHDFilename, hirelingCHD);
 }
 
-// StackableGems
-{
-  const SINGLE_ITEM_CODE = 'gem';
-  const STACK_ITEM_CODE = 'sgem';
-
-  const ITEM_TYPES = [];
-  function converItemTypeToStackItemType(itemtype) {
-    if (itemtype != null && ITEM_TYPES.indexOf(itemtype) !== -1) {
-      // original idea to use "z" as prefix ran into issues due to "zlb" already being taken
-      // in favor of backwards compatibility, only changing this one conflict
-      const prefix = itemtype === 'glb' ? 'q' : 'z';
-      return `${prefix}${itemtype.slice(1)}`;
-    }
-    return itemtype;
-  }
-
-  const miscFilenames = [];
-
-  const itemsFilename = 'hd\\items\\items.json';
-  const items = D2RMM.readJson(itemsFilename);
-  const newItems = [...items];
-  for (const index in items) {
-    const item = items[index];
-    for (const itemtype in item) {
-      const asset = item[itemtype].asset;
-      if (
-        asset.startsWith(`${SINGLE_ITEM_CODE}/`) &&
-        !asset.endsWith('_stack') &&
-        itemtype !== 'jew' // exclude jewels
-      ) {
-        ITEM_TYPES.push(itemtype);
-        const itemtypeStack = converItemTypeToStackItemType(itemtype);
-        newItems.push({ [itemtypeStack]: { asset: `${asset}_stack` } });
-        miscFilenames.push(asset.replace(`${SINGLE_ITEM_CODE}/`, ''));
-      }
-    }
-  }
-  D2RMM.writeJson(itemsFilename, newItems);
-
-  const miscDirFilename = `hd\\items\\misc\\${SINGLE_ITEM_CODE}\\`;
-  for (const index in miscFilenames) {
-    const miscFilename = `${miscDirFilename + miscFilenames[index]}.json`;
-    const miscStackFilename = `${miscDirFilename + miscFilenames[index]
-      }_stack.json`;
-    const miscStack = D2RMM.readJson(miscFilename);
-    D2RMM.writeJson(miscStackFilename, miscStack);
-  }
-
-  const itemtypesFilename = 'global\\excel\\itemtypes.txt';
-  const itemtypes = D2RMM.readTsv(itemtypesFilename);
-  itemtypes.rows.forEach((itemtype) => {
-    if (itemtype.Code === SINGLE_ITEM_CODE) {
-      itemtypes.rows.push({
-        ...itemtype,
-        ItemType: `${itemtype.ItemType} Stack`,
-        Code: STACK_ITEM_CODE,
-        Equiv1: 'misc',
-        AutoStack: 1,
-      });
-    }
-  });
-  D2RMM.writeTsv(itemtypesFilename, itemtypes);
-
-  if (config.default) {
-    const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
-    const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
-    treasureclassex.rows.forEach((treasureclass) => {
-      treasureclass.Item1 = converItemTypeToStackItemType(treasureclass.Item1);
-      treasureclass.Item2 = converItemTypeToStackItemType(treasureclass.Item2);
-      treasureclass.Item3 = converItemTypeToStackItemType(treasureclass.Item3);
-      treasureclass.Item4 = converItemTypeToStackItemType(treasureclass.Item4);
-      treasureclass.Item5 = converItemTypeToStackItemType(treasureclass.Item5);
-      treasureclass.Item6 = converItemTypeToStackItemType(treasureclass.Item6);
-      treasureclass.Item7 = converItemTypeToStackItemType(treasureclass.Item7);
-    });
-    D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
-  }
-
-  const miscFilename = 'global\\excel\\misc.txt';
-  const misc = D2RMM.readTsv(miscFilename);
-  misc.rows.forEach((item) => {
-    if (ITEM_TYPES.indexOf(item.code) !== -1) {
-      const itemStack = {
-        ...item,
-        name: `${item.name} Stack`,
-        compactsave: 0,
-        type: STACK_ITEM_CODE,
-        code: converItemTypeToStackItemType(item.code),
-        stackable: 1,
-        minstack: 1,
-        maxstack: config.maxStack,
-        spawnstack: 1,
-        spelldesc: 2,
-        spelldescstr: 'StackableGem',
-        spelldesccolor: 0,
-      };
-      delete itemStack.type2;
-      misc.rows.push(itemStack);
-      item.spawnable = 0;
-    }
-  });
-  D2RMM.writeTsv(miscFilename, misc);
-
-  const itemNamesFilename = 'local\\lng\\strings\\item-names.json';
-  const itemNames = D2RMM.readJson(itemNamesFilename);
-  ITEM_TYPES.forEach((itemtype) => {
-    const itemName = itemNames.find(({ Key }) => Key === itemtype);
-    if (itemName != null) {
-      const stacktype = converItemTypeToStackItemType(itemtype);
-      itemNames.push({
-        ...itemName,
-        id: D2RMM.getNextStringID(),
-        Key: stacktype,
-      });
-    }
-  });
-  D2RMM.writeJson(itemNamesFilename, itemNames);
-
-  const itemModifiersFilename = 'local\\lng\\strings\\item-modifiers.json';
-  const itemModifiers = D2RMM.readJson(itemModifiersFilename);
-  itemModifiers.push({
-    id: D2RMM.getNextStringID(),
-    Key: 'StackableGem',
-    enUS: 'Can be transmuted into a usable gem',
-    zhTW: '可以转化为可用的宝石',
-    deDE: 'Kann in einen nutzbaren Edelstein umgewandelt werden',
-    esES: 'Se puede transmutar en una gema utilizable',
-    frFR: 'Peut être transmuté en gemme utilisable',
-    itIT: 'Può essere trasmutato in una gemma utilizzabile',
-    koKR: '사용 가능한 보석으로 변환할 수 있습니다',
-    plPL: 'Może zostać przekształcony w użyteczny klejnot',
-    esMX: 'Se puede transmutar en una gema utilizable',
-    jaJP: '使用可能な宝石に変換することができます',
-    ptBR: 'Pode ser transmutado em uma gema utilizável',
-    ruRU: 'Может быть превращен в полезный драгоценный камень',
-    zhCN: '可以转化为可用的宝石',
-  });
-  D2RMM.writeJson(itemModifiersFilename, itemModifiers);
-
-  const cubemainFilename = 'global\\excel\\cubemain.txt';
-  const cubemain = D2RMM.readTsv(cubemainFilename);
-  for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
-    const itemtype = ITEM_TYPES[i];
-    const stacktype = converItemTypeToStackItemType(itemtype);
-    // convert from single to stack
-    cubemain.rows.push({
-      description: `${itemtype} -> ${stacktype}`,
-      enabled: 1,
-      version: 100,
-      numinputs: 1,
-      'input 1': itemtype,
-      output: stacktype,
-      '*eol': 0,
-    });
-    // convert from stack to single
-    cubemain.rows.push({
-      description: `${stacktype} -> ${itemtype}`,
-      enabled: 1,
-      version: 100,
-      op: 18, // skip recipe if item's Stat.Accr(param) != value
-      param: 70, // quantity (itemstatcost.txt)
-      value: 1, // only execute rule if quantity == 1
-      numinputs: 1,
-      'input 1': stacktype,
-      output: itemtype,
-      '*eol': 0,
-    });
-  }
-
-  // this is behind a config option because it's *a lot* of recipes...
-  if (config.convertWhenDestacking) {
-    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
-      const itemtype = ITEM_TYPES[i];
-      const stacktype = converItemTypeToStackItemType(itemtype);
-      for (let j = 2; j <= config.maxStack; j = j + 1) {
-        cubemain.rows.push({
-          description: `Stack of ${j} ${itemtype} -> Stack of ${j - 1
-            } and Stack of 1`,
-          enabled: 1,
-          version: 0,
-          op: 18, // skip recipe if item's Stat.Accr(param) != value
-          param: 70, // quantity (itemstatcost.txt)
-          value: j, // only execute rule if quantity == j
-          numinputs: 1,
-          'input 1': stacktype,
-          output: `"${stacktype},qty=${j - 1}"`,
-          'output b': `"${itemtype},qty=1"`,
-          '*eol': 0,
-        });
-      }
-    }
-  }
-  // if another mod already added destacking, don't add it again
-  else if (
-    cubemain.rows.find(
-      (row) => row.description === 'Stack of 2 -> Stack of 1 and Stack of 1'
-    ) == null
-  ) {
-    for (let i = 2; i <= config.maxStack; i = i + 1) {
-      cubemain.rows.push({
-        description: `Stack of ${i} -> Stack of ${i - 1} and Stack of 1`,
-        enabled: 1,
-        version: 0,
-        op: 18, // skip recipe if item's Stat.Accr(param) != value
-        param: 70, // quantity (itemstatcost.txt)
-        value: i, // only execute rule if quantity == i
-        numinputs: 1,
-        'input 1': 'misc',
-        output: `"usetype,qty=${i - 1}"`,
-        'output b': `"usetype,qty=1"`,
-        '*eol': 0,
-      });
-    }
-  }
-
-  if (config.bulkUpgrade) {
-    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
-      // no upgrade for perfect gems
-      if ((i + 1) % 5 == 0) {
-        continue;
-      }
-      const itemtype = ITEM_TYPES[i];
-      const stacktype = converItemTypeToStackItemType(itemtype);
-      const upgradedItemtype = ITEM_TYPES[i + 1];
-      const upgradedStacktype = converItemTypeToStackItemType(upgradedItemtype);
-      for (let j = 30; j < config.maxStack; j = j + 1) {
-        cubemain.rows.push({
-          description:
-            `Stack of ${j} ${itemtype} + 1 id scroll -> Stack` +
-            ` of 10 ${upgradedItemtype} + Stack of ${j - 30} ${itemtype} + 1` +
-            ` id scroll`,
-          enabled: 1,
-          version: 0,
-          op: 18, // skip recipe if item's Stat.Accr(param) != value
-          param: 70, // quantity (itemstatcost.txt)
-          value: j, // only execute rule if quantity == j
-          numinputs: 2,
-          'input 1': stacktype,
-          'input 2': 'isc',
-          output: `"${upgradedStacktype},qty=10"`,
-          'output b': j == 30 ? null : `"${stacktype},qty=${j - 30}"`,
-          'output c': 'isc',
-          '*eol': 0,
-        });
-      }
-    }
-  }
-  D2RMM.writeTsv(cubemainFilename, cubemain);
-}
-
-// StackableRunes
-{
-  const SINGLE_ITEM_CODE = 'rune';
-  const STACK_ITEM_CODE = 'runs';
-
-  const ITEM_TYPES = [];
-  function converItemTypeToStackItemType(itemtype) {
-    if (itemtype != null && ITEM_TYPES.indexOf(itemtype) !== -1) {
-      return itemtype.replace(/^r/, 's');
-    }
-    return itemtype;
-  }
-
-  const miscFilenames = [];
-
-  const itemsFilename = 'hd\\items\\items.json';
-  const items = D2RMM.readJson(itemsFilename);
-  const newItems = [...items];
-  for (const index in items) {
-    const item = items[index];
-    for (const itemtype in item) {
-      const asset = item[itemtype].asset;
-      if (asset.startsWith(`${SINGLE_ITEM_CODE}/`) && !asset.endsWith('_stack')) {
-        ITEM_TYPES.push(itemtype);
-        const itemtypeStack = converItemTypeToStackItemType(itemtype);
-        newItems.push({ [itemtypeStack]: { asset: `${asset}_stack` } });
-        miscFilenames.push(asset.replace(`${SINGLE_ITEM_CODE}/`, ''));
-      }
-    }
-  }
-  D2RMM.writeJson(itemsFilename, newItems);
-
-  const miscDirFilename = `hd\\items\\misc\\${SINGLE_ITEM_CODE}\\`;
-  for (const index in miscFilenames) {
-    const miscFilename = `${miscDirFilename + miscFilenames[index]}.json`;
-    const miscStackFilename = `${miscDirFilename + miscFilenames[index]
-      }_stack.json`;
-    const miscStack = D2RMM.readJson(miscFilename);
-    D2RMM.writeJson(miscStackFilename, miscStack);
-  }
-
-  const itemtypesFilename = 'global\\excel\\itemtypes.txt';
-  const itemtypes = D2RMM.readTsv(itemtypesFilename);
-  itemtypes.rows.forEach((itemtype) => {
-    if (itemtype.Code === SINGLE_ITEM_CODE) {
-      itemtypes.rows.push({
-        ...itemtype,
-        ItemType: `${itemtype.ItemType} Stack`,
-        Code: STACK_ITEM_CODE,
-        Equiv1: 'misc',
-        AutoStack: 1,
-      });
-    }
-  });
-  D2RMM.writeTsv(itemtypesFilename, itemtypes);
-
-  if (config.default) {
-    const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
-    const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
-    treasureclassex.rows.forEach((treasureclass) => {
-      treasureclass.Item1 = converItemTypeToStackItemType(treasureclass.Item1);
-      treasureclass.Item2 = converItemTypeToStackItemType(treasureclass.Item2);
-    });
-    D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
-  }
-
-  const miscFilename = 'global\\excel\\misc.txt';
-  const misc = D2RMM.readTsv(miscFilename);
-  misc.rows.forEach((item) => {
-    if (ITEM_TYPES.indexOf(item.code) !== -1) {
-      misc.rows.push({
-        ...item,
-        name: `${item.name} Stack`,
-        compactsave: 0,
-        type: STACK_ITEM_CODE,
-        code: converItemTypeToStackItemType(item.code),
-        stackable: 1,
-        minstack: 1,
-        maxstack: config.maxStack,
-        spawnstack: 1,
-        spelldesc: 2,
-        spelldescstr: 'StackableRune',
-        spelldesccolor: 0,
-      });
-      item.spawnable = 0;
-    }
-  });
-  D2RMM.writeTsv(miscFilename, misc);
-
-  const itemNamesFilename = 'local\\lng\\strings\\item-names.json';
-  const itemNames = D2RMM.readJson(itemNamesFilename);
-  ITEM_TYPES.forEach((itemtype) => {
-    const itemName = itemNames.find(({ Key }) => Key === itemtype);
-    if (itemName != null) {
-      const stacktype = converItemTypeToStackItemType(itemtype);
-      itemNames.push({
-        ...itemName,
-        id: D2RMM.getNextStringID(),
-        Key: stacktype,
-      });
-    }
-  });
-  D2RMM.writeJson(itemNamesFilename, itemNames);
-
-  const itemModifiersFilename = 'local\\lng\\strings\\item-modifiers.json';
-  const itemModifiers = D2RMM.readJson(itemModifiersFilename);
-  itemModifiers.push({
-    id: D2RMM.getNextStringID(),
-    Key: 'StackableRune',
-    enUS: 'Can be transmuted into a usable rune',
-    zhTW: '可以转化为可用的符文',
-    deDE: 'Kann in eine nutzbare Rune umgewandelt werden',
-    esES: 'Se puede transmutar en una runa utilizable',
-    frFR: 'Peut être transmuté en une rune utilisable',
-    itIT: 'Può essere trasmutato in una runa utilizzabile',
-    koKR: '사용 가능한 룬으로 변환할 수 있습니다',
-    plPL: 'Może zostać przemieniony w użyteczną runę',
-    esMX: 'Se puede transmutar en una runa utilizable',
-    jaJP: '使用可能なルーンに変換できます',
-    ptBR: 'Pode ser transmutado em uma runa utilizável',
-    ruRU: 'Может быть преобразован в полезную руну',
-    zhCN: '可以转化为可用的符文',
-  });
-  D2RMM.writeJson(itemModifiersFilename, itemModifiers);
-
-  const cubemainFilename = 'global\\excel\\cubemain.txt';
-  const cubemain = D2RMM.readTsv(cubemainFilename);
-  for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
-    const itemtype = ITEM_TYPES[i];
-    const stacktype = converItemTypeToStackItemType(itemtype);
-    // convert from single to stack
-    cubemain.rows.push({
-      description: `${itemtype} -> ${stacktype}`,
-      enabled: 1,
-      version: 100,
-      numinputs: 1,
-      'input 1': itemtype,
-      output: stacktype,
-      '*eol': 0,
-    });
-    // convert from stack to single
-    cubemain.rows.push({
-      description: `${stacktype} -> ${itemtype}`,
-      enabled: 1,
-      version: 100,
-      op: 18, // skip recipe if item's Stat.Accr(param) != value
-      param: 70, // quantity (itemstatcost.txt)
-      value: 1, // only execute rule if quantity == 1
-      numinputs: 1,
-      'input 1': stacktype,
-      output: itemtype,
-      '*eol': 0,
-    });
-  }
-
-  // this is behind a config option because it's *a lot* of recipes...
-  if (config.convertWhenDestacking) {
-    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
-      const itemtype = ITEM_TYPES[i];
-      const stacktype = converItemTypeToStackItemType(itemtype);
-      for (let j = 2; j <= config.maxStack; j = j + 1) {
-        cubemain.rows.push({
-          description: `Stack of ${j} ${itemtype} -> Stack of ${j - 1
-            } and Stack of 1`,
-          enabled: 1,
-          version: 0,
-          op: 18, // skip recipe if item's Stat.Accr(param) != value
-          param: 70, // quantity (itemstatcost.txt)
-          value: j, // only execute rule if quantity == j
-          numinputs: 1,
-          'input 1': stacktype,
-          output: `"${stacktype},qty=${j - 1}"`,
-          'output b': `"${itemtype},qty=1"`,
-          '*eol': 0,
-        });
-      }
-    }
-  }
-  // if another mod already added destacking, don't add it again
-  else if (
-    cubemain.rows.find(
-      (row) => row.description === 'Stack of 2 -> Stack of 1 and Stack of 1'
-    ) == null
-  ) {
-    for (let i = 2; i <= config.maxStack; i = i + 1) {
-      cubemain.rows.push({
-        description: `Stack of ${i} -> Stack of ${i - 1} and Stack of 1`,
-        enabled: 1,
-        version: 0,
-        op: 18, // skip recipe if item's Stat.Accr(param) != value
-        param: 70, // quantity (itemstatcost.txt)
-        value: i, // only execute rule if quantity == i
-        numinputs: 1,
-        'input 1': 'misc',
-        output: `"usetype,qty=${i - 1}"`,
-        'output b': `"usetype,qty=1"`,
-        '*eol': 0,
-      });
-    }
-  }
-  D2RMM.writeTsv(cubemainFilename, cubemain);
-
-  // D2R colors runes as orange by default, but it seems to be based on item type
-  // rather than localization strings so it does not apply to the stacked versions
-  // we update the localization file to manually color the names of runes here
-  // so that it will also apply to the stacked versions of the runes
-  const itemRunesFilename = 'local\\lng\\strings\\item-runes.json';
-  const itemRunes = D2RMM.readJson(itemRunesFilename);
-  itemRunes.forEach((item) => {
-    const itemtype = item.Key;
-    if (itemtype.match(/^r[0-9]{2}$/) != null) {
-      // update all localizations
-      for (const key in item) {
-        if (key !== 'id' && key !== 'Key') {
-          if (item[key].indexOf('ÿc') !== -1) {
-            // if the rune is already colored by something else (e.g. another mod)
-            // then respect that change and don't override it
-            continue;
-          }
-          // no idea what this is, but color codes before [fs] don't work
-          const [, prefix = '', value] = item[key].match(/^(\[fs\])?(.*)$/) ?? [
-            '',
-            '',
-            item[key],
-          ];
-          item[key] = `${prefix}ÿc8${value}`;
-        }
-      }
-    }
-  });
-  D2RMM.writeJson(itemRunesFilename, itemRunes);
-}
-
 // Improved rune drop and general drop rate
 {
   function SetDefaultQuestProp(row, setNoDrop) {
@@ -3641,6 +3158,798 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
   D2RMM.writeTsv(armorFilename, armor);
 }
 
+// D2SE_Enjoy-SP_Mod_1.7 implementation cubemain.txt'
+// Removed the gems from the rune upgrade recipes. 
+// - Up until Pul: 3 of the same runes = next rune
+// - After Pul: 2 of a kind + jewel = next rune
+// Removed Hel-Rune from the de-socked recipe. New recipe: 1 Town Scroll + Socketed Item (destroys gems).
+{
+  const runeChangesExtra = [
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Thul Runes + 1 Chipped Topaz -> Amn Rune",
+      "new_description": "3 Thul Runes -> Amn Rune",
+      "numinputs": "3",
+      "input1": "\"r10,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Amn Runes + 1 Chipped Amethyst -> Sol Rune",
+      "new_description": "3 Amn Runes -> Sol Rune",
+      "numinputs": "3",
+      "input1": "\"r11,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Sol Runes + 1 Chipped Sapphire -> Shael Rune",
+      "new_description": "3 Sol Runes -> Shael Rune",
+      "numinputs": "3",
+      "input1": "\"r12,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": ""
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Shael Runes + 1 Chipped Ruby -> Dol Rune",
+      "new_description": "3 Shael Runes -> Dol Rune",
+      "numinputs": "3",
+      "input1": "\"r13,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Dol Runes + 1 Chipped Emerald -> Hel Rune",
+      "new_description": "3 Dol Runes -> Hel Rune",
+      "numinputs": "3",
+      "input1": "\"r14,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Hel Runes + 1 Chipped Diamond -> Io Rune",
+      "new_description": "3 Hel Runes -> Io Rune",
+      "numinputs": "3",
+      "input1": "\"r15,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Io Runes + 1 Flawed Topaz -> Lum Rune",
+      "new_description": "3 Io Runes -> Lum Rune",
+      "numinputs": "3",
+      "input1": "\"r16,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Lum Runes + 1 Flawed Amethyst -> Ko Rune",
+      "new_description": "3 Lum Runes -> Ko Rune",
+      "numinputs": "3",
+      "input1": "\"r17,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Ko Runes + 1 Flawed Sapphire -> Fal Rune",
+      "new_description": "3 Ko Runes -> Fal Rune",
+      "numinputs": "3",
+      "input1": "\"r18,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Fal Runes + 1 Flawed Ruby -> Lem Rune",
+      "new_description": "3 Fal Runes -> Lem Rune",
+      "numinputs": "3",
+      "input1": "\"r19,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "3 Lem Runes + 1 Flawed Emerald -> Pul Rune",
+      "new_description": "3 Lem Runes -> Pul Rune",
+      "numinputs": "3",
+      "input1": "\"r20,qty=3\"",
+      "input2": "",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Pul Runes + 1 Flawed Diamond -> Um Rune",
+      "new_description": "2 Pul Runes + 1 Jewel -> Um Rune",
+      "numinputs": "3",
+      "input1": "\"r21,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Um Runes + 1 Standard Topaz -> Mal Rune",
+      "new_description": "2 Um Runes + 1 Jewel -> Mal Rune",
+      "numinputs": "3",
+      "input1": "\"r22,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Mal Runes + 1 Standard Amethyst -> Ist Rune",
+      "new_description": "2 Mal Runes + 1 Jewel -> Ist Rune",
+      "numinputs": "3",
+      "input1": "\"r23,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Ist Runes + 1 Standard Sapphire -> Gul Rune",
+      "new_description": "2 Ist Runes + 1 Jewel -> Gul Rune",
+      "numinputs": "3",
+      "input1": "\"r24,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Gul Runes + 1 Standard Ruby -> Vex Rune",
+      "new_description": "2 Gul Runes + 1 Jewel -> Vex Rune",
+      "numinputs": "3",
+      "input1": "\"r25,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Vex Runes + 1 Standard Emerald -> Ohm Rune",
+      "new_description": "2 Vex Runes + 1 Jewel -> Ohm Rune",
+      "numinputs": "3",
+      "input1": "\"r26,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Ohm Runes + 1 Standard Diamond -> Lo Rune",
+      "new_description": "2 Ohm Runes + 1 Jewel -> Lo Rune",
+      "numinputs": "3",
+      "input1": "\"r27,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Lo Runes + 1 Flawless Topaz -> Sur Rune",
+      "new_description": "2 Lo Runes +1 Jewel -> Sur Rune",
+      "numinputs": "3",
+      "input1": "\"r28,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Sur Runes + 1 Flawless Amethyst -> Ber Rune",
+      "new_description": "2 Sur Runes + 1 Jewel -> Ber Rune",
+      "numinputs": "3",
+      "input1": "\"r29,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Ber Runes + 1 Flawless Sapphire -> Jah Rune",
+      "new_description": "2 Ber Runes + 1 Jewel -> Jah Rune",
+      "numinputs": "3",
+      "input1": "\"r30,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Jah Runes + 1 Flawless Ruby -> Cham Rune",
+      "new_description": "2 Jah Runes + 1 Jewel -> Cham Rune",
+      "numinputs": "3",
+      "input1": "\"r31,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "2 Cham Runes + 1 Flawless Emerald -> Zod Rune",
+      "new_description": "2 Cham Runes + 1 Jewel -> Zod Rune",
+      "numinputs": "3",
+      "input1": "\"r32,qty=2\"",
+      "input2": "jew",
+      "input3": "",
+      "input4": "",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "old_description": "1 Twisted Essence of Suffering + 1 Charged Essence of Hatred + 1 Burning Essence of Terror + 1 Festering Essence of Destruction -> Token of Absolution",
+      "new_description": "1 Scroll of Town Portal + Scroll of Identify -> Token of Absolution",
+      "numinputs": "2",
+      "input1": "tsc",
+      "input2": "isc",
+      "input3": "",
+      "input4": "",
+    }];
+
+  const cubemainFilename = 'global\\excel\\cubemain.txt';
+  const cubemain = D2RMM.readTsv(cubemainFilename);
+  cubemain.rows.forEach((row) => {
+    const theName = row['description'];
+    const change = runeChangesExtra.find(rc => rc.old_description === theName);
+    if (change) {
+      row['description'] = change.new_description;
+      row['numinputs'] = change.numinputs;
+      row['input 1'] = change.input1;
+      row['input 2'] = change.input2;
+      row['input 3'] = change.input3;
+      row['input 4'] = change.input4;
+    }
+  });
+  D2RMM.writeTsv(cubemainFilename, cubemain);
+}
+
+// D2SE_Enjoy-SP_Mod_1.7 implementation cubemain.txt'
+// New recipes to add sockets to items via the Horadric Cube
+{
+  const newRecipes = [
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Unique Armor or Weapon -> Socketed Unique 1",
+      "numinputs": "2",
+      "input1": "any,uni",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Skull + Set Armor or Weapon -> Socketed Set 1",
+      "numinputs": "2",
+      "input1": "any,set",
+      "input2": "skz,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + 1 Normal Torso Armor -> Socketed Torso Armor 1",
+      "numinputs": "2",
+      "input1": "tors,nor,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + 1 Normal Torso Armor -> Socketed Torso Armor 2",
+      "numinputs": "3",
+      "input1": "tors,nor,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + 1 Normal Torso Armor -> Socketed Torso Armor 3",
+      "numinputs": "4",
+      "input1": "tors,nor,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + 1 Normal Torso Armor -> Socketed Torso Armor 4",
+      "numinputs": "5",
+      "input1": "tors,nor,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+   },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Superior Armor -> Socketed Superior Armor 1",
+      "numinputs": "2",
+      "input1": "tors,hiq,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Superior Armor -> Socketed Superior Armor 2",
+      "numinputs": "3",
+      "input1": "tors,hiq,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Superior Armor -> Socketed Superior Armor 3",
+      "numinputs": "4",
+      "input1": "tors,hiq,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + Superior Armor -> Socketed Superior Armor 4",
+      "numinputs": "5",
+      "input1": "tors,hiq,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Normal Helm -> Socketed Normal Helm 1",
+      "numinputs": "2",
+      "input1": "helm,nor,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem  + Normal Helm -> Socketed Normal Helm 2",
+      "numinputs": "3",
+      "input1": "helm,nor,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Normal Helm -> Socketed Normal Helm 3",
+      "numinputs": "4",
+      "input1": "helm,nor,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Superior Helm -> Socketed Superior Helm 1",
+      "numinputs": "2",
+      "input1": "helm,hiq,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Superior Helm -> Socketed Superior Helm 2",
+      "numinputs": "3",
+      "input1": "helm,hiq,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Superior Helm -> Socketed Superior Helm 3",
+      "numinputs": "4",
+      "input1": "helm,hiq,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Normal Shield -> Socketed Shield 1",
+      "numinputs": "2",
+      "input1": "shld,nor,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Normal Shield -> Socketed Shield 2",
+      "numinputs": "3",
+      "input1": "shld,nor,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Normal Shield -> Socketed Shield 3",
+      "numinputs": "4",
+      "input1": "shld,nor,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + Normal Shield -> Socketed Shield 4",
+      "numinputs": "5",
+      "input1": "shld,nor,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Superior Shield -> Socketed Superior Shield 1",
+      "numinputs": "2",
+      "input1": "shld,hiq,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Superior Shield -> Socketed Superior Shield 2",
+      "numinputs": "3",
+      "input1": "shld,hiq,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Superior Shield -> Socketed Superior Shield 3",
+      "numinputs": "4",
+      "input1": "shld,hiq,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + Superior Shield -> Socketed Superior Shield 4",
+      "numinputs": "5",
+      "input1": "shld,hiq,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Normal Weapon -> Socketed Weapon 1",
+      "numinputs": "2",
+      "input1": "weap,nor,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Normal Weapon -> Socketed Weapon 2",
+      "numinputs": "3",
+      "input1": "weap,nor,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Normal Weapon -> Socketed Weapon 3",
+      "numinputs": "4",
+      "input1": "weap,nor,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + Normal Weapon -> Socketed Weapon 4",
+      "numinputs": "5",
+      "input1": "weap,nor,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Unique Ring + 2 Perfect Skull + Normal Weapon -> Socketed Weapon 5",
+      "numinputs": "3",
+      "input1": "weap,nor,nos",
+      "input2": "ring,uni",
+      "input3": "skz,qty=1",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "5",
+      "mod1Max": "5",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Unique Ring + 1 Perfect Skull + Normal Weapon -> Socketed Weapon 6",
+      "numinputs": "4",
+      "input1": "weap,nor,nos",
+      "input2": "ring,uni",
+      "input3": "skz,qty=2",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "6",
+      "mod1Max": "6",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "1 Perfect Gem + Superior Weapon -> Socketed Superior. Weapon 1",
+      "numinputs": "2",
+      "input1": "weap,hiq,nos",
+      "input2": "gem4,qty=1",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "1",
+      "mod1Max": "1",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "2 Perfect Gem + Superior Weapon -> Socketed Superior. Weapon 2",
+      "numinputs": "3",
+      "input1": "weap,hiq,nos",
+      "input2": "gem4,qty=2",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "2",
+      "mod1Max": "2",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "3 Perfect Gem + Superior Weapon -> Socketed Superior Weapon 3",
+      "numinputs": "4",
+      "input1": "weap,hiq,nos",
+      "input2": "gem4,qty=3",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "3",
+      "mod1Max": "3",
+    },
+    {
+      "enabled": 1,
+      "version": 100,
+      "description": "4 Perfect Gem + Superior Weapon -> Socketed Superior Weapon 4",
+      "numinputs": "5",
+      "input1": "weap,hiq,nos",
+      "input2": "gem4,qty=4",
+      "input3": "",
+      "input4": "",
+      "useitem": "useitem",
+      "mod1": "sock",
+      "mod1Min": "4",
+      "mod1Max": "4",
+    }
+  ];
+
+  const cubemainFilename = 'global\\excel\\cubemain.txt';
+  const cubemain = D2RMM.readTsv(cubemainFilename);
+  newRecipes.forEach((newRecipe) => {
+    cubemain.rows.push({
+      ...newRecipe,
+      'description': newRecipe.description,
+      'numinputs': newRecipe.numinputs,
+      'input 1': "\"" + newRecipe.input1 + "\"",
+      'input 2': newRecipe.input2,
+      'input 3': newRecipe.input3,
+      'input 4': newRecipe.input4,
+      'output': "\"" + newRecipe.useitem + "\"",
+      'mod 1': newRecipe.mod1,
+      'mod 1 min': newRecipe.mod1Min,
+      'mod 1 max': newRecipe.mod1Max,
+      '*eol\r': 0,
+    });
+  })
+  D2RMM.writeTsv(cubemainFilename, cubemain);
+}
+
 // D2SE_Enjoy-SP_Mod_1.7 implementation Misc.txt
 {
   const miscFilename = 'global\\excel\\misc.txt';
@@ -3879,293 +4188,487 @@ if (D2RMM.getVersion == null || D2RMM.getVersion() < 1.6) {
 
 }
 
-// D2SE_Enjoy-SP_Mod_1.7 implementation cubemain.txt'
-// Removed the gems from the rune upgrade recipes. 
-// - Up until Pul: 3 of the same runes = next rune
-// - After Pul: 2 of a kind + jewel = next rune
-// Removed Hel-Rune from the de-socked recipe. New recipe: 1 Town Scroll + Socketed Item (destroys gems).
+// StackableGems
 {
-  const cubemainFilename = 'global\\excel\\cubemain.txt';
-  const cubemain = D2RMM.readTsv(cubemainFilename);
-  cubemain.rows.forEach((row) => {
-    if (row.description === '3 Thul Runes + 1 Chipped Topaz -> Amn Rune') {
-      row.description = '3 Thul Runes -> Amn Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
+  const SINGLE_ITEM_CODE = 'gem';
+  const STACK_ITEM_CODE = 'sgem';
+
+  const ITEM_TYPES = [];
+  function converItemTypeToStackItemType(itemtype) {
+    if (itemtype != null && ITEM_TYPES.indexOf(itemtype) !== -1) {
+      // original idea to use "z" as prefix ran into issues due to "zlb" already being taken
+      // in favor of backwards compatibility, only changing this one conflict
+      const prefix = itemtype === 'glb' ? 'q' : 'z';
+      return `${prefix}${itemtype.slice(1)}`;
     }
-    if (row.description === '3 Amn Runes + 1 Chipped Amethyst -> Sol Rune') {
-      row.description = '3 Amn Runes -> Sol Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
+    return itemtype;
+  }
+
+  const miscFilenames = [];
+
+  const itemsFilename = 'hd\\items\\items.json';
+  const items = D2RMM.readJson(itemsFilename);
+  const newItems = [...items];
+  for (const index in items) {
+    const item = items[index];
+    for (const itemtype in item) {
+      const asset = item[itemtype].asset;
+      if (
+        asset.startsWith(`${SINGLE_ITEM_CODE}/`) &&
+        !asset.endsWith('_stack') &&
+        itemtype !== 'jew' // exclude jewels
+      ) {
+        ITEM_TYPES.push(itemtype);
+        const itemtypeStack = converItemTypeToStackItemType(itemtype);
+        newItems.push({ [itemtypeStack]: { asset: `${asset}_stack` } });
+        miscFilenames.push(asset.replace(`${SINGLE_ITEM_CODE}/`, ''));
+      }
     }
-    if (row.description === '3 Sol Runes + 1 Chipped Sapphire -> Shael Rune') {
-      row.description = '3 Sol Runes -> Shael Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Shael Runes + 1 Chipped Ruby -> Dol Rune') {
-      row.description = '3 Shael Runes -> Dol Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Dol Runes + 1 Chipped Emerald -> Hel Rune') {
-      row.description = '3 Dol Runes -> Hel Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Hel Runes + 1 Chipped Diamond -> Io Rune') {
-      row.description = '3 Hel Runes -> Io Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Io Runes + 1 Flawed Topaz -> Lum Rune') {
-      row.description = '3 Io Runes -> Lum Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Lum Runes + 1 Flawed Amethyst -> Ko Rune') {
-      row.description = '3 Lum Runes -> Ko Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Ko Runes + 1 Flawed Sapphire -> Fal Rune') {
-      row.description = '3 Ko Runes -> Fal Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Fal Runes + 1 Flawed Ruby -> Lem Rune') {
-      row.description = '3 Fal Runes -> Lem Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '3 Lem Runes + 1 Flawed Emerald -> Pul Rune') {
-      row.description = '3 Lem Runes -> Pul Rune';
-      row.numinputs = 3;
-      row['input 2'] = '';
-    }
-    if (row.description === '2 Pul Runes + 1 Flawed Diamond -> Um Rune') {
-      row.description = '2 Pul Runes + 1 Jewel -> Um Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Um Runes + 1 Standard Topaz -> Mal Rune') {
-      row.description = '2 Um Runes + 1 Jewel -> Mal Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Mal Runes + 1 Standard Amethyst -> Ist Rune') {
-      row.description = '2 Mal Runes + 1 Jewel -> Ist Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Ist Runes + 1 Standard Sapphire -> Gul Rune') {
-      row.description = '2 Ist Runes + 1 Jewel -> Gul Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Gul Runes + 1 Standard Ruby -> Vex Rune') {
-      row.description = '2 Gul Runes + 1 Jewel -> Vex Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Vex Runes + 1 Standard Emerald -> Ohm Rune') {
-      row.description = '2 Vex Runes + 1 Jewel -> Ohm Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Ohm Runes + 1 Standard Diamond -> Lo Rune') {
-      row.description = '2 Ohm Runes + 1 Jewel -> Lo Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Lo Runes + 1 Flawless Topaz -> Sur Rune') {
-      row.description = '2 Lo Runes + 1 Jewel -> Sur Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Sur Runes + 1 Flawless Amethyst -> Ber Rune') {
-      row.description = '2 Sur Runes + 1 Jewel -> Ber Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Ber Runes + 1 Flawless Sapphire -> Jah Rune') {
-      row.description = '2 Ber Runes + 1 Jewel -> Jah Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Jah Runes + 1 Flawless Ruby -> Cham Rune') {
-      row.description = '2 Jah Runes + 1 Jewel -> Cham Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '2 Cham Runes + 1 Flawless Emerald -> Zod Rune') {
-      row.description = '2 Cham Runes + Jewel -> Zod Rune';
-      row['input 2'] = 'jew';
-    }
-    if (row.description === '1 Hel Rune + Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item') {
-      row.description = 'Scroll of Town Portal + 1 Socketed Item -> Clear Sockets on Item';
-      row.numinputs = 2;
-      row['input 1'] = 'any,sock';
-      row['input 2'] = 'tsc';
-      row['input 3'] = '';
-    }
-    if (row.description === '1 Twisted Essence of Suffering + 1 Charged Essence of Hatred + 1 Burning Essence of Terror + 1 Festering Essence of Destruction -> Token of Absolution') {
-      row.description = 'Token of Absolution',
-        row.numinputs = 2;
-      row['input 1'] = 'tsc';
-      row['input 2'] = 'isc';
-      row['input 3'] = '';
-      row['input 4'] = '';
+  }
+  D2RMM.writeJson(itemsFilename, newItems);
+
+  const miscDirFilename = `hd\\items\\misc\\${SINGLE_ITEM_CODE}\\`;
+  for (const index in miscFilenames) {
+    const miscFilename = `${miscDirFilename + miscFilenames[index]}.json`;
+    const miscStackFilename = `${miscDirFilename + miscFilenames[index]
+      }_stack.json`;
+    const miscStack = D2RMM.readJson(miscFilename);
+    D2RMM.writeJson(miscStackFilename, miscStack);
+  }
+
+  const itemtypesFilename = 'global\\excel\\itemtypes.txt';
+  const itemtypes = D2RMM.readTsv(itemtypesFilename);
+  itemtypes.rows.forEach((itemtype) => {
+    if (itemtype.Code === SINGLE_ITEM_CODE) {
+      itemtypes.rows.push({
+        ...itemtype,
+        ItemType: `${itemtype.ItemType} Stack`,
+        Code: STACK_ITEM_CODE,
+        Equiv1: 'misc',
+        AutoStack: 1,
+      });
     }
   });
+  D2RMM.writeTsv(itemtypesFilename, itemtypes);
+
+  if (config.default) {
+    const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
+    const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
+    treasureclassex.rows.forEach((treasureclass) => {
+      treasureclass.Item1 = converItemTypeToStackItemType(treasureclass.Item1);
+      treasureclass.Item2 = converItemTypeToStackItemType(treasureclass.Item2);
+      treasureclass.Item3 = converItemTypeToStackItemType(treasureclass.Item3);
+      treasureclass.Item4 = converItemTypeToStackItemType(treasureclass.Item4);
+      treasureclass.Item5 = converItemTypeToStackItemType(treasureclass.Item5);
+      treasureclass.Item6 = converItemTypeToStackItemType(treasureclass.Item6);
+      treasureclass.Item7 = converItemTypeToStackItemType(treasureclass.Item7);
+    });
+    D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
+  }
+
+  const miscFilename = 'global\\excel\\misc.txt';
+  const misc = D2RMM.readTsv(miscFilename);
+  misc.rows.forEach((item) => {
+    if (ITEM_TYPES.indexOf(item.code) !== -1) {
+      const itemStack = {
+        ...item,
+        name: `${item.name} Stack`,
+        compactsave: 0,
+        type: STACK_ITEM_CODE,
+        code: converItemTypeToStackItemType(item.code),
+        stackable: 1,
+        minstack: 1,
+        maxstack: config.maxStack,
+        spawnstack: 1,
+        spelldesc: 2,
+        spelldescstr: 'StackableGem',
+        spelldesccolor: 0,
+      };
+      delete itemStack.type2;
+      misc.rows.push(itemStack);
+      item.spawnable = 0;
+    }
+  });
+  D2RMM.writeTsv(miscFilename, misc);
+
+  const itemNamesFilename = 'local\\lng\\strings\\item-names.json';
+  const itemNames = D2RMM.readJson(itemNamesFilename);
+  ITEM_TYPES.forEach((itemtype) => {
+    const itemName = itemNames.find(({ Key }) => Key === itemtype);
+    if (itemName != null) {
+      const stacktype = converItemTypeToStackItemType(itemtype);
+      itemNames.push({
+        ...itemName,
+        id: D2RMM.getNextStringID(),
+        Key: stacktype,
+      });
+    }
+  });
+  D2RMM.writeJson(itemNamesFilename, itemNames);
+
+  const itemModifiersFilename = 'local\\lng\\strings\\item-modifiers.json';
+  const itemModifiers = D2RMM.readJson(itemModifiersFilename);
+  itemModifiers.push({
+    id: D2RMM.getNextStringID(),
+    Key: 'StackableGem',
+    enUS: 'Can be transmuted into a usable gem',
+    zhTW: '可以转化为可用的宝石',
+    deDE: 'Kann in einen nutzbaren Edelstein umgewandelt werden',
+    esES: 'Se puede transmutar en una gema utilizable',
+    frFR: 'Peut être transmuté en gemme utilisable',
+    itIT: 'Può essere trasmutato in una gemma utilizzabile',
+    koKR: '사용 가능한 보석으로 변환할 수 있습니다',
+    plPL: 'Może zostać przekształcony w użyteczny klejnot',
+    esMX: 'Se puede transmutar en una gema utilizable',
+    jaJP: '使用可能な宝石に変換することができます',
+    ptBR: 'Pode ser transmutado em uma gema utilizável',
+    ruRU: 'Может быть превращен в полезный драгоценный камень',
+    zhCN: '可以转化为可用的宝石',
+  });
+  D2RMM.writeJson(itemModifiersFilename, itemModifiers);
+
+  const cubemainFilename = 'global\\excel\\cubemain.txt';
+  const cubemain = D2RMM.readTsv(cubemainFilename);
+  for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
+    const itemtype = ITEM_TYPES[i];
+    const stacktype = converItemTypeToStackItemType(itemtype);
+    // convert from single to stack
+    cubemain.rows.push({
+      description: `${itemtype} -> ${stacktype}`,
+      enabled: 1,
+      version: 100,
+      numinputs: 1,
+      'input 1': itemtype,
+      output: stacktype,
+      '*eol\r': 0,
+    });
+    // convert from stack to single
+    cubemain.rows.push({
+      description: `${stacktype} -> ${itemtype}`,
+      enabled: 1,
+      version: 100,
+      op: 18, // skip recipe if item's Stat.Accr(param) != value
+      param: 70, // quantity (itemstatcost.txt)
+      value: 1, // only execute rule if quantity == 1
+      numinputs: 1,
+      'input 1': stacktype,
+      output: itemtype,
+      '*eol\r': 0,
+    });
+  }
+
+  // this is behind a config option because it's *a lot* of recipes...
+  if (config.convertWhenDestacking) {
+    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
+      const itemtype = ITEM_TYPES[i];
+      const stacktype = converItemTypeToStackItemType(itemtype);
+      for (let j = 2; j <= config.maxStack; j = j + 1) {
+        cubemain.rows.push({
+          description: `Stack of ${j} ${itemtype} -> Stack of ${j - 1
+            } and Stack of 1`,
+          enabled: 1,
+          version: 0,
+          op: 18, // skip recipe if item's Stat.Accr(param) != value
+          param: 70, // quantity (itemstatcost.txt)
+          value: j, // only execute rule if quantity == j
+          numinputs: 1,
+          'input 1': stacktype,
+          output: `"${stacktype},qty=${j - 1}"`,
+          'output b': `"${itemtype},qty=1"`,
+          '*eol\r': 0,
+        });
+      }
+    }
+  }
+  // if another mod already added destacking, don't add it again
+  else if (
+    cubemain.rows.find(
+      (row) => row.description === 'Stack of 2 -> Stack of 1 and Stack of 1'
+    ) == null
+  ) {
+    for (let i = 2; i <= config.maxStack; i = i + 1) {
+      cubemain.rows.push({
+        description: `Stack of ${i} -> Stack of ${i - 1} and Stack of 1`,
+        enabled: 1,
+        version: 0,
+        op: 18, // skip recipe if item's Stat.Accr(param) != value
+        param: 70, // quantity (itemstatcost.txt)
+        value: i, // only execute rule if quantity == i
+        numinputs: 1,
+        'input 1': 'misc',
+        output: `"usetype,qty=${i - 1}"`,
+        'output b': `"usetype,qty=1"`,
+        '*eol\r': 0,
+      });
+    }
+  }
+
+  if (config.bulkUpgrade) {
+    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
+      // no upgrade for perfect gems
+      if ((i + 1) % 5 == 0) {
+        continue;
+      }
+      const itemtype = ITEM_TYPES[i];
+      const stacktype = converItemTypeToStackItemType(itemtype);
+      const upgradedItemtype = ITEM_TYPES[i + 1];
+      const upgradedStacktype = converItemTypeToStackItemType(upgradedItemtype);
+      for (let j = 30; j < config.maxStack; j = j + 1) {
+        cubemain.rows.push({
+          description:
+            `Stack of ${j} ${itemtype} + 1 id scroll -> Stack` +
+            ` of 10 ${upgradedItemtype} + Stack of ${j - 30} ${itemtype} + 1` +
+            ` id scroll`,
+          enabled: 1,
+          version: 0,
+          op: 18, // skip recipe if item's Stat.Accr(param) != value
+          param: 70, // quantity (itemstatcost.txt)
+          value: j, // only execute rule if quantity == j
+          numinputs: 2,
+          'input 1': stacktype,
+          'input 2': 'isc',
+          output: `"${upgradedStacktype},qty=10"`,
+          'output b': j == 30 ? null : `"${stacktype},qty=${j - 30}"`,
+          'output c': 'isc',
+          '*eol\r': 0,
+        });
+      }
+    }
+  }
   D2RMM.writeTsv(cubemainFilename, cubemain);
 }
 
-// Socket recipes
+// StackableRunes
 {
+  const SINGLE_ITEM_CODE = 'rune';
+  const STACK_ITEM_CODE = 'runs';
+
+  const ITEM_TYPES = [];
+  function converItemTypeToStackItemType(itemtype) {
+    if (itemtype != null && ITEM_TYPES.indexOf(itemtype) !== -1) {
+      return itemtype.replace(/^r/, 's');
+    }
+    return itemtype;
+  }
+
+  const miscFilenames = [];
+
+  const itemsFilename = 'hd\\items\\items.json';
+  const items = D2RMM.readJson(itemsFilename);
+  const newItems = [...items];
+  for (const index in items) {
+    const item = items[index];
+    for (const itemtype in item) {
+      const asset = item[itemtype].asset;
+      if (asset.startsWith(`${SINGLE_ITEM_CODE}/`) && !asset.endsWith('_stack')) {
+        ITEM_TYPES.push(itemtype);
+        const itemtypeStack = converItemTypeToStackItemType(itemtype);
+        newItems.push({ [itemtypeStack]: { asset: `${asset}_stack` } });
+        miscFilenames.push(asset.replace(`${SINGLE_ITEM_CODE}/`, ''));
+      }
+    }
+  }
+  D2RMM.writeJson(itemsFilename, newItems);
+
+  const miscDirFilename = `hd\\items\\misc\\${SINGLE_ITEM_CODE}\\`;
+  for (const index in miscFilenames) {
+    const miscFilename = `${miscDirFilename + miscFilenames[index]}.json`;
+    const miscStackFilename = `${miscDirFilename + miscFilenames[index]
+      }_stack.json`;
+    const miscStack = D2RMM.readJson(miscFilename);
+    D2RMM.writeJson(miscStackFilename, miscStack);
+  }
+
+  const itemtypesFilename = 'global\\excel\\itemtypes.txt';
+  const itemtypes = D2RMM.readTsv(itemtypesFilename);
+  itemtypes.rows.forEach((itemtype) => {
+    if (itemtype.Code === SINGLE_ITEM_CODE) {
+      itemtypes.rows.push({
+        ...itemtype,
+        ItemType: `${itemtype.ItemType} Stack`,
+        Code: STACK_ITEM_CODE,
+        Equiv1: 'misc',
+        AutoStack: 1,
+      });
+    }
+  });
+  D2RMM.writeTsv(itemtypesFilename, itemtypes);
+
+  if (config.default) {
+    const treasureclassexFilename = 'global\\excel\\treasureclassex.txt';
+    const treasureclassex = D2RMM.readTsv(treasureclassexFilename);
+    treasureclassex.rows.forEach((treasureclass) => {
+      treasureclass.Item1 = converItemTypeToStackItemType(treasureclass.Item1);
+      treasureclass.Item2 = converItemTypeToStackItemType(treasureclass.Item2);
+    });
+    D2RMM.writeTsv(treasureclassexFilename, treasureclassex);
+  }
+
+  const miscFilename = 'global\\excel\\misc.txt';
+  const misc = D2RMM.readTsv(miscFilename);
+  misc.rows.forEach((item) => {
+    if (ITEM_TYPES.indexOf(item.code) !== -1) {
+      misc.rows.push({
+        ...item,
+        name: `${item.name} Stack`,
+        compactsave: 0,
+        type: STACK_ITEM_CODE,
+        code: converItemTypeToStackItemType(item.code),
+        stackable: 1,
+        minstack: 1,
+        maxstack: config.maxStack,
+        spawnstack: 1,
+        spelldesc: 2,
+        spelldescstr: 'StackableRune',
+        spelldesccolor: 0,
+      });
+      item.spawnable = 0;
+    }
+  });
+  D2RMM.writeTsv(miscFilename, misc);
+
+  const itemNamesFilename = 'local\\lng\\strings\\item-names.json';
+  const itemNames = D2RMM.readJson(itemNamesFilename);
+  ITEM_TYPES.forEach((itemtype) => {
+    const itemName = itemNames.find(({ Key }) => Key === itemtype);
+    if (itemName != null) {
+      const stacktype = converItemTypeToStackItemType(itemtype);
+      itemNames.push({
+        ...itemName,
+        id: D2RMM.getNextStringID(),
+        Key: stacktype,
+      });
+    }
+  });
+  D2RMM.writeJson(itemNamesFilename, itemNames);
+
+  const itemModifiersFilename = 'local\\lng\\strings\\item-modifiers.json';
+  const itemModifiers = D2RMM.readJson(itemModifiersFilename);
+  itemModifiers.push({
+    id: D2RMM.getNextStringID(),
+    Key: 'StackableRune',
+    enUS: 'Can be transmuted into a usable rune',
+    zhTW: '可以转化为可用的符文',
+    deDE: 'Kann in eine nutzbare Rune umgewandelt werden',
+    esES: 'Se puede transmutar en una runa utilizable',
+    frFR: 'Peut être transmuté en une rune utilisable',
+    itIT: 'Può essere trasmutato in una runa utilizzabile',
+    koKR: '사용 가능한 룬으로 변환할 수 있습니다',
+    plPL: 'Może zostać przemieniony w użyteczną runę',
+    esMX: 'Se puede transmutar en una runa utilizable',
+    jaJP: '使用可能なルーンに変換できます',
+    ptBR: 'Pode ser transmutado em uma runa utilizável',
+    ruRU: 'Может быть преобразован в полезную руну',
+    zhCN: '可以转化为可用的符文',
+  });
+  D2RMM.writeJson(itemModifiersFilename, itemModifiers);
+
   const cubemainFilename = 'global\\excel\\cubemain.txt';
   const cubemain = D2RMM.readTsv(cubemainFilename);
-  // Add upto 4 Sockets with number of Perfect Gems.  5 & 6 Sockets use Perfect Skulls
-  for (let sockets = 1; sockets <= 6; sockets = sockets + 1) {
-    const socketRecipe = {
-      description: `${sockets} Perfect Gem`,
+  for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
+    const itemtype = ITEM_TYPES[i];
+    const stacktype = converItemTypeToStackItemType(itemtype);
+    // convert from single to stack
+    cubemain.rows.push({
+      description: `${itemtype} -> ${stacktype}`,
       enabled: 1,
       version: 100,
-      numinputs: sockets + 1,
-      'input 2': `gem4,qty=${sockets}`,
-      output: 'useitem',
-      'mod 1': 'sock',
-      'mod 1 min': sockets,
-      'mod 1 max': sockets,
-      '*eol': 0,
-    };
-    function addRecipeNormal(code, name) {
-      cubemain.rows.push({
-        ...socketRecipe,
-        description: `${socketRecipe.description} + Normal ${name} -> Socket Normal ${name} ${sockets}`,
-        'input 1': `${code},nor,nos`
-      });
-    }
-    function addRecipeSpecial(code, name) {
-      cubemain.rows.push({
-        ...socketRecipe,
-        description: `${socketRecipe.description} + Special ${name} -> Socket Special ${name} ${sockets}`,
-        'input 1': `${code},hiq,nos`
-      });
-    }
-    function addRecipeNormalSkull(code, quantity) {
-      cubemain.rows.push({
-        ...socketRecipe,
-        description: `Perfect Skull + Normal or Unique Weapon -> Socket Normal or Unique ${sockets}`,
-        numinputs: quantity + 2,
-        'input 1': `weap,${code},nos`,
-        'input 2': `ring,uni`,
-        'input 3': `skz,qty=${quantity}`,
-      });
-    }
-    if (sockets <= 4) {
-      addRecipeNormal('helm', 'Helm');
-      addRecipeNormal('shld', 'Shield');
-      addRecipeNormal('tors', 'Torso');
-      addRecipeNormal('weap', 'Weapon');
-      addRecipeSpecial('helm', 'Helm');
-      addRecipeSpecial('shld', 'Shield');
-      addRecipeSpecial('tors', 'Torso');
-      addRecipeSpecial('weap', 'Weapon');
-    }
-    if (sockets === 5) {
-      addRecipeNormalSkull('nor', 1);
-      addRecipeNormalSkull('hiq', 1);
-    }
-    if (sockets === 6) {
-      addRecipeNormalSkull('nor', 2);
-      addRecipeNormalSkull('hiq', 2);
-    }
+      numinputs: 1,
+      'input 1': itemtype,
+      output: stacktype,
+      '*eol\r': 0,
+    });
+    // convert from stack to single
+    cubemain.rows.push({
+      description: `${stacktype} -> ${itemtype}`,
+      enabled: 1,
+      version: 100,
+      op: 18, // skip recipe if item's Stat.Accr(param) != value
+      param: 70, // quantity (itemstatcost.txt)
+      value: 1, // only execute rule if quantity == 1
+      numinputs: 1,
+      'input 1': stacktype,
+      output: itemtype,
+      '*eol\r': 0,
+    });
   }
 
-  // Perfect Skull and Ring
-  {
-    const socketRecipe = {
-      description: `1 Unique Rings`,
-      enabled: 1,
-      version: 100,
-      numinputs: 3,
-      'input 2': 'ring,uni',
-      'input 3': 'skz,qty=1',
-      'mod 1': 'sock',
-      'mod 1 min': 5,
-      'mod 1 max': 5,
-      output: 'useitem',
-      '*eol': 0,
-    };
-
-    function addRecipeRingPerfectSkullNormal(code, name, nRings) {
-      const sockets = nRings === 1 ? 5 : 6;
+  // this is behind a config option because it's *a lot* of recipes...
+  if (config.convertWhenDestacking) {
+    for (let i = 0; i < ITEM_TYPES.length; i = i + 1) {
+      const itemtype = ITEM_TYPES[i];
+      const stacktype = converItemTypeToStackItemType(itemtype);
+      for (let j = 2; j <= config.maxStack; j = j + 1) {
+        cubemain.rows.push({
+          description: `Stack of ${j} ${itemtype} -> Stack of ${j - 1
+            } and Stack of 1`,
+          enabled: 1,
+          version: 0,
+          op: 18, // skip recipe if item's Stat.Accr(param) != value
+          param: 70, // quantity (itemstatcost.txt)
+          value: j, // only execute rule if quantity == j
+          numinputs: 1,
+          'input 1': stacktype,
+          output: `"${stacktype},qty=${j - 1}"`,
+          'output b': `"${itemtype},qty=1"`,
+          '*eol\r': 0,
+        });
+      }
+    }
+  }
+  // if another mod already added destacking, don't add it again
+  else if (
+    cubemain.rows.find(
+      (row) => row.description === 'Stack of 2 -> Stack of 1 and Stack of 1'
+    ) == null
+  ) {
+    for (let i = 2; i <= config.maxStack; i = i + 1) {
       cubemain.rows.push({
-        ...socketRecipe,
-        description: `${socketRecipe.description} ${nRings} Perfect Skull + Normal ${name} -> Socket ${name} ${sockets}`,
-        'input 1': `${code},nor,nos`,
-        numinputs: nRings + 2,
-        'input 3': `skz,qty=${nRings}`,
-        'mod 1 min': sockets,
-        'mod 1 max': sockets,
+        description: `Stack of ${i} -> Stack of ${i - 1} and Stack of 1`,
+        enabled: 1,
+        version: 0,
+        op: 18, // skip recipe if item's Stat.Accr(param) != value
+        param: 70, // quantity (itemstatcost.txt)
+        value: i, // only execute rule if quantity == i
+        numinputs: 1,
+        'input 1': 'misc',
+        output: `"usetype,qty=${i - 1}"`,
+        'output b': `"usetype,qty=1"`,
+        '*eol\r': 0,
       });
     }
-
-    function addRecipeRingPerfectSkullSpecial(code, name, nRings) {
-      const sockets = nRings === 1 ? 5 : 6;
-      cubemain.rows.push({
-        ...socketRecipe,
-        description: `${socketRecipe.description} ${nRings} Perfect Skull + Special ${name} -> Socket ${name} ${sockets}`,
-        'input 1': `${code},hiq,nos`,
-        numinputs: nRings + 2,
-        'input 3': `skz,qty=${nRings}`,
-        'mod 1 min': sockets,
-        'mod 1 max': sockets,
-      });
-    }
-
-    addRecipeRingPerfectSkullNormal('weap', 'Weapon', 1);
-    addRecipeRingPerfectSkullNormal('weap', 'Weapon', 2);
-    addRecipeRingPerfectSkullSpecial('weap', 'Weapon', 1);
-    addRecipeRingPerfectSkullSpecial('weap', 'Weapon', 2);
-  }
-
-  // Perfect Skull and Set Item
-  {
-    const socketRecipe = {
-      description: `1 Perfect Skull + 1 Set Item -> 1 Socket Set Item`,
-      enabled: 1,
-      version: 100,
-      numinputs: 2,
-      'input 1': `any,set`,
-      'input 2': 'skz,qty=1',
-      'mod 1': `sock`,
-      'mod 1 min': 1,
-      'mod 1 max': 1,
-      output: 'useitem',
-      '*eol': 0,
-    };
-
-    function addRecipe() {
-      cubemain.rows.push({ ...socketRecipe });
-    }
-
-    addRecipe();
-  }
-
-  // Perfect Gem and Unique Item
-  {
-    const socketRecipe = {
-      description: `1 Perfect Gem + 1 Unique Item -> 1 Socket Set Item`,
-      enabled: 1,
-      version: 100,
-      numinputs: 2,
-      'input 1': `any,uni`,
-      'input 2': 'gem4,qty=1',
-      'mod 1': `sock`,
-      'mod 1 min': 1,
-      'mod 1 max': 1,
-      output: 'useitem',
-      '*eol': 0,
-    };
-
-    function addRecipe() {
-      cubemain.rows.push({ ...socketRecipe });
-    }
-
-    addRecipe();
   }
   D2RMM.writeTsv(cubemainFilename, cubemain);
+
+  // D2R colors runes as orange by default, but it seems to be based on item type
+  // rather than localization strings so it does not apply to the stacked versions
+  // we update the localization file to manually color the names of runes here
+  // so that it will also apply to the stacked versions of the runes
+  const itemRunesFilename = 'local\\lng\\strings\\item-runes.json';
+  const itemRunes = D2RMM.readJson(itemRunesFilename);
+  itemRunes.forEach((item) => {
+    const itemtype = item.Key;
+    if (itemtype.match(/^r[0-9]{2}$/) != null) {
+      // update all localizations
+      for (const key in item) {
+        if (key !== 'id' && key !== 'Key') {
+          if (item[key].indexOf('ÿc') !== -1) {
+            // if the rune is already colored by something else (e.g. another mod)
+            // then respect that change and don't override it
+            continue;
+          }
+          // no idea what this is, but color codes before [fs] don't work
+          const [, prefix = '', value] = item[key].match(/^(\[fs\])?(.*)$/) ?? [
+            '',
+            '',
+            item[key],
+          ];
+          item[key] = `${prefix}ÿc8${value}`;
+        }
+      }
+    }
+  });
+  D2RMM.writeJson(itemRunesFilename, itemRunes);
 }
 
 // MrLamaSc character startup
